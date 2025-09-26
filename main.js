@@ -1,31 +1,6 @@
 // 通用JavaScript功能
 
-// 音效函数
-function playSound(id) {
-  const sound = document.getElementById(id);
-  if (sound) {
-    sound.currentTime = 0;
-    sound.play().catch(e => console.log('无法播放音效:', e));
-  }
-}
 
-// 为带有sound-hover类的元素添加悬停音效
-function setupHoverSounds() {
-  document.querySelectorAll('.sound-hover').forEach(element => {
-    element.addEventListener('mouseenter', function() {
-      playSound('hover-sound');
-    });
-  });
-}
-
-// 为带有sound-click类的元素添加点击音效
-function setupClickSounds() {
-  document.querySelectorAll('.sound-click').forEach(element => {
-    element.addEventListener('click', function() {
-      playSound('click-sound');
-    });
-  });
-}
 
 // 导航栏滚动效果
 function setupNavbarScroll() {
