@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我们的团队 - Project-X 游戏工作室</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7652FF', // 主色调：紫色
+            secondary: '#FF6B6B', // 辅助色：红色
+            accent: '#00D2FF', // 强调色：青色
+            dark: '#121212', // 深色背景
+            light: '#F8F9FA', // 浅色文本
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义样式 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      .animate-pulse-slow {
+        animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+    }
+    
+    /* 全局动画 */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+  
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #F8F9FA;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, rgba(118, 82, 255, 0.9), rgba(0, 210, 255, 0.9));
+    }
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background-color: #7652FF;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+    .team-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .team-card:hover {
+      transform: translateY(-15px);
+    }
+    .team-card:hover .team-social {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .team-social {
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  </style>
+</head>
+<body class="font-inter">
+  <!-- 导航栏 -->
+  <div id="navbar-container"></div>
+
+  <!-- 团队页面标题 -->
+  <section class="relative py-32 bg-dark overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <div class="absolute inset-0 bg-dark/90 z-10"></div>
+      <img src="https://picsum.photos/id/160/1920/1080" alt="背景" class="absolute inset-0 w-full h-full object-cover opacity-40">
+    </div>
+    <div class="container mx-auto px-4 relative z-20 text-center">
+      <h1 class="text-[clamp(2rem,5vw,4rem)] font-extrabold mb-6">
+        <span class="bg-gradient-to-r from-primary to-accent text-gradient">我们的团队</span>
+      </h1>
+      <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-300 max-w-2xl mx-auto">
+        由充满激情和创造力的游戏开发者组成，致力于打造令人惊叹的游戏体验
+      </p>
+    </div>
+  </section>
+
+  <!-- 团队介绍 -->
+  <section id="team" class="py-20 bg-gradient-to-b from-dark to-dark/80">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">团队介绍</h2>
+        <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+        <p class="text-gray-400 max-w-3xl mx-auto">
+          我们是一群热爱游戏的专业人士，拥有丰富的行业经验和创新精神，共同致力于创造难忘的游戏体验
+        </p>
+      </div>
+      
+      <!-- 团队成员网格 -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- 加入我们的团队 -->
+        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 hover:border-primary/50 transition-all card-hover sound-hover">
+          <div class="w-32 h-32 bg-primary/20 rounded-full flex items-center justify-center text-primary text-4xl mb-6 mx-auto">
+            <i class="fa fa-user-plus"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2 text-center">加入我们</h3>
+          <p class="text-gray-400 mb-6 text-center">
+            我们正在寻找优秀的人才加入团队，一起创造令人惊叹的游戏
+          </p>
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-start">
+              <i class="fa fa-check text-primary mt-1 mr-3"></i>
+              <span>游戏开发工程师</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-check text-primary mt-1 mr-3"></i>
+              <span>游戏美术设计师</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fa fa-check text-primary mt-1 mr-3"></i>
+              <span>游戏音频设计师</span>
+            </li>
+          </ul>
+          <a href="contact.html" class="inline-block px-6 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all text-center w-full sound-click">
+            联系我们
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 团队文化 -->
+  <section class="py-20 bg-dark">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">我们的文化</h2>
+        <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+        <p class="text-gray-400 max-w-3xl mx-auto">
+          在Project-X，我们培养开放、创新和协作的工作环境，让每个人都能充分发挥自己的潜力
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- 价值观1 -->
+        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 hover:border-primary/50 transition-all card-hover sound-hover">
+          <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center text-primary text-2xl mb-6">
+            <i class="fa fa-lightbulb-o"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-4">创新精神</h3>
+          <p class="text-gray-400">
+            我们鼓励创新思维，不断探索新的游戏玩法和技术，为玩家带来全新的游戏体验。
+          </p>
+        </div>
+        
+        <!-- 价值观2 -->
+        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 hover:border-primary/50 transition-all card-hover sound-hover">
+          <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center text-primary text-2xl mb-6">
+            <i class="fa fa-users"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-4">团队协作</h3>
+          <p class="text-gray-400">
+            我们相信团队的力量，通过协作和沟通，共同解决问题，创造卓越的游戏作品。
+          </p>
+        </div>
+        
+        <!-- 价值观3 -->
+        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 hover:border-primary/50 transition-all card-hover sound-hover">
+          <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center text-primary text-2xl mb-6">
+            <i class="fa fa-trophy"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-4">追求卓越</h3>
+          <p class="text-gray-400">
+            我们对品质有着不懈的追求，注重细节，不断完善，确保每一款游戏都达到最高标准。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 工作环境 -->
+  <section class="py-20 bg-gradient-to-b from-dark to-dark/90">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">工作环境</h2>
+        <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+        <p class="text-gray-400 max-w-3xl mx-auto">
+          我们提供舒适、现代的工作环境，配备先进的设备和设施，让团队成员能够专注创作
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+        <img src="https://picsum.photos/id/1060/600/400" alt="办公室环境1" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform sound-hover">
+        <img src="https://picsum.photos/id/1048/600/400" alt="办公室环境2" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform sound-hover">
+        <img src="https://picsum.photos/id/1082/600/400" alt="办公室环境3" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform sound-hover">
+        <img src="https://picsum.photos/id/1059/600/400" alt="办公室环境4" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform sound-hover">
+        <img src="https://picsum.photos/id/177/600/400" alt="办公室环境5" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform sound-hover">
+        <img src="https://picsum.photos/id/180/600/400" alt="办公室环境6" class="w-full h-64 object-cover rounded-xl hover:scale-105 transition-transform sound-hover">
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系号召 -->
+  <section class="py-20 bg-gradient-to-r from-primary/30 to-accent/30">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-6">想加入我们的团队？</h2>
+      <p class="text-gray-300 max-w-2xl mx-auto mb-8">
+        如果您对游戏充满热情，并且拥有专业技能，欢迎加入我们，一起创造精彩的游戏世界
+      </p>
+      <a href="contact.html" class="inline-block px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all shadow-lg text-lg sound-click">
+        立即申请
+      </a>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <div id="footer-container"></div>
+
+  <!-- 返回顶部按钮 -->
+  <button id="back-to-top" class="fixed bottom-6 right-6 w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white text-xl opacity-0 invisible transition-all z-50 sound-click">
+    <i class="fa fa-arrow-up"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script>
+    // 加载导航栏和页脚
+    document.addEventListener('DOMContentLoaded', function() {
+      // 加载导航栏
+      fetch('navbar.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('navbar-container').innerHTML = html;
+          
+          // 设置当前页面的导航链接为活动状态
+          const teamLink = document.querySelector('a[href="team.html"]');
+          if (teamLink) {
+            teamLink.classList.add('active');
+          }
+          
+          // 初始化导航栏功能
+          initNavbar();
+        });
+      
+      // 加载页脚
+      fetch('footer.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('footer-container').innerHTML = html;
+        });
+      
+      // 加载音效
+      fetch('sounds.html')
+        .then(response => response.text())
+        .then(html => {
+          document.body.insertAdjacentHTML('beforeend', html);
+        });
+    });
+    
+    // 导航栏初始化函数
+    function initNavbar() {
+      const navbar = document.getElementById('navbar');
+      const backToTop = document.getElementById('back-to-top');
+      
+      // 导航栏滚动效果
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+          navbar.classList.add('bg-dark/95', 'backdrop-blur-lg', 'shadow-lg');
+          navbar.classList.remove('py-4');
+          navbar.classList.add('py-2');
+          
+          backToTop.classList.remove('opacity-0', 'invisible');
+          backToTop.classList.add('opacity-100', 'visible');
+        } else {
+          navbar.classList.remove('bg-dark/95', 'backdrop-blur-lg', 'shadow-lg');
+          navbar.classList.remove('py-2');
+          navbar.classList.add('py-4');
+          
+          backToTop.classList.add('opacity-0', 'invisible');
+          backToTop.classList.remove('opacity-100', 'visible');
+        }
+      });
+      
+      // 移动端菜单
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+          menuToggle.innerHTML = mobileMenu.classList.contains('hidden') ? 
+            '<i class="fa fa-bars"></i>' : '<i class="fa fa-times"></i>';
+          
+          // 播放点击音效
+          playClickSound();
+        });
+        
+        // 移动端菜单点击关闭
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+          link.addEventListener('click', function() {
+            mobileMenu.classList.add('hidden');
+            menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+          });
+        });
+      }
+      
+      // 返回顶部
+      backToTop.addEventListener('click', function() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+    
+    // 音效播放函数
+    function playClickSound() {
+      const clickSound = document.getElementById('click-sound');
+      if (clickSound) {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => console.log('无法播放音效:', e));
+      }
+    }
+    
+    function playHoverSound() {
+      const hoverSound = document.getElementById('hover-sound');
+      if (hoverSound) {
+        hoverSound.currentTime = 0;
+        hoverSound.play().catch(e => console.log('无法播放音效:', e));
+      }
+    }
+    
+    // 为带音效类的元素添加事件监听器
+    document.querySelectorAll('.sound-hover').forEach(element => {
+      element.addEventListener('mouseenter', playHoverSound);
+    });
+    
+    document.querySelectorAll('.sound-click').forEach(element => {
+      element.addEventListener('click', playClickSound);
+    });
+  </script>
+</body>
+</html>
