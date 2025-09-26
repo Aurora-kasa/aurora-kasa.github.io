@@ -1,0 +1,37 @@
+<header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <a href="index.html" class="flex items-center space-x-2 sound-hover">
+      <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+        <span class="text-white text-xl font-bold">X</span>
+      </div>
+      <span class="text-white text-xl font-bold">Project-X</span>
+    </a>
+    
+    <!-- 桌面导航 -->
+    <nav class="hidden md:flex space-x-8">
+      <a href="index.html" class="nav-link text-white hover:text-primary transition-colors sound-hover">首页</a>
+      <a href="about.html" class="nav-link text-white hover:text-primary transition-colors sound-hover">关于我们</a>
+      <a href="games.html" class="nav-link text-white hover:text-primary transition-colors sound-hover">游戏作品</a>
+      <a href="services.html" class="nav-link text-white hover:text-primary transition-colors sound-hover">服务</a>
+      <a href="team.html" class="nav-link text-white hover:text-primary transition-colors sound-hover">团队</a>
+      <a href="contact.html" class="nav-link text-white hover:text-primary transition-colors sound-hover">联系我们</a>
+    </nav>
+    
+    <!-- 移动端菜单按钮 -->
+    <button id="menu-toggle" class="md:hidden text-white text-2xl sound-click">
+      <i class="fa fa-bars"></i>
+    </button>
+  </div>
+  
+  <!-- 移动端导航菜单 -->
+  <div id="mobile-menu" class="md:hidden hidden bg-dark/95 backdrop-blur-lg absolute w-full">
+    <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+      <a href="index.html" class="text-white hover:text-primary py-2 transition-colors sound-click">首页</a>
+      <a href="about.html" class="text-white hover:text-primary py-2 transition-colors sound-click">关于我们</a>
+      <a href="games.html" class="text-white hover:text-primary py-2 transition-colors sound-click">游戏作品</a>
+      <a href="services.html" class="text-white hover:text-primary py-2 transition-colors sound-click">服务</a>
+      <a href="team.html" class="text-white hover:text-primary py-2 transition-colors sound-click">团队</a>
+      <a href="contact.html" class="text-white hover:text-primary py-2 transition-colors sound-click">联系我们</a>
+    </div>
+  </div>
+</header>

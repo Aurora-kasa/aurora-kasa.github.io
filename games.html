@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>游戏作品 - Project-X 游戏工作室</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7652FF', // 主色调：紫色
+            secondary: '#FF6B6B', // 辅助色：红色
+            accent: '#00D2FF', // 强调色：青色
+            dark: '#121212', // 深色背景
+            light: '#F8F9FA', // 浅色文本
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义样式 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      .animate-pulse-slow {
+        animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    }
+    
+    /* 全局动画 */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+  
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #F8F9FA;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, rgba(118, 82, 255, 0.9), rgba(0, 210, 255, 0.9));
+    }
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background-color: #7652FF;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+    .progress-bar {
+      transition: width 1.5s ease-in-out;
+    }
+    /* 游戏卡片动画 */
+    .game-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body class="font-inter">
+  <!-- 导航栏 -->
+  <div id="navbar-container"></div>
+
+  <!-- 游戏页面标题 -->
+  <section class="relative py-32 bg-dark overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <div class="absolute inset-0 bg-dark/90 z-10"></div>
+      <img src="https://picsum.photos/id/119/1920/1080" alt="背景" class="absolute inset-0 w-full h-full object-cover opacity-40">
+    </div>
+    <div class="container mx-auto px-4 relative z-20 text-center">
+      <h1 class="text-[clamp(2rem,5vw,4rem)] font-extrabold mb-6">
+        <span class="bg-gradient-to-r from-primary to-accent text-gradient">游戏作品</span>
+      </h1>
+      <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-300 max-w-2xl mx-auto">
+        探索我们精心打造的游戏世界，每一款作品都代表着我们对游戏艺术的热爱和追求
+      </p>
+    </div>
+  </section>
+
+  <!-- 游戏作品 -->
+  <section id="games" class="py-20 bg-gradient-to-b from-dark to-dark/80">
+    <div class="container mx-auto px-4">
+      <!-- 游戏筛选 -->
+      <div class="flex flex-wrap justify-center gap-4 mb-12">
+        <button class="game-filter-btn active px-6 py-2 rounded-full bg-primary text-white font-medium transition-all sound-click" data-filter="all">全部</button>
+        <button class="game-filter-btn px-6 py-2 rounded-full bg-dark/60 text-gray-300 hover:bg-primary/90 hover:text-white font-medium transition-all sound-click" data-filter="action">动作</button>
+        <button class="game-filter-btn px-6 py-2 rounded-full bg-dark/60 text-gray-300 hover:bg-primary/90 hover:text-white font-medium transition-all sound-click" data-filter="adventure">冒险</button>
+        <button class="game-filter-btn px-6 py-2 rounded-full bg-dark/60 text-gray-300 hover:bg-primary/90 hover:text-white font-medium transition-all sound-click" data-filter="rpg">角色扮演</button>
+        <button class="game-filter-btn px-6 py-2 rounded-full bg-dark/60 text-gray-300 hover:bg-primary/90 hover:text-white font-medium transition-all sound-click" data-filter="strategy">策略</button>
+      </div>
+      
+      <!-- 游戏作品展示 -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- 游戏1 -->
+        <div class="game-card card-hover group sound-hover" data-category="action">
+          <div class="relative overflow-hidden rounded-xl">
+            <img src="https://picsum.photos/id/237/600/400" alt="星际战士" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+              <div class="text-xs uppercase tracking-wider text-primary mb-2">动作 / 射击</div>
+              <h3 class="text-xl font-bold mb-2">星际战士</h3>
+              <p class="text-gray-300 text-sm mb-4">一款激烈的太空战斗游戏，玩家将扮演星际战士与外星侵略者战斗。</p>
+              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
+                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 游戏2 -->
+        <div class="game-card card-hover group sound-hover" data-category="adventure">
+          <div class="relative overflow-hidden rounded-xl">
+            <img src="https://picsum.photos/id/29/600/400" alt="神秘探险" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+              <div class="text-xs uppercase tracking-wider text-primary mb-2">冒险 / 解谜</div>
+              <h3 class="text-xl font-bold mb-2">神秘探险</h3>
+              <p class="text-gray-300 text-sm mb-4">探索古老遗迹，解开隐藏的谜题，发现失落的文明秘密。</p>
+              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
+                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 游戏3 -->
+        <div class="game-card card-hover group sound-hover" data-category="rpg">
+          <div class="relative overflow-hidden rounded-xl">
+            <img src="https://picsum.photos/id/119/600/400" alt="魔法传说" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+              <div class="text-xs uppercase tracking-wider text-primary mb-2">角色扮演 / 开放世界</div>
+              <h3 class="text-xl font-bold mb-2">魔法传说</h3>
+              <p class="text-gray-300 text-sm mb-4">在充满魔法的世界中冒险，选择自己的道路，成为传奇英雄。</p>
+              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
+                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 游戏4 -->
+        <div class="game-card card-hover group sound-hover" data-category="strategy">
+          <div class="relative overflow-hidden rounded-xl">
+            <img src="https://picsum.photos/id/30/600/400" alt="帝国争霸" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+              <div class="text-xs uppercase tracking-wider text-primary mb-2">策略 / 建造</div>
+              <h3 class="text-xl font-bold mb-2">帝国争霸</h3>
+              <p class="text-gray-300 text-sm mb-4">建造和管理自己的帝国，发展经济，训练军队，征服世界。</p>
+              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
+                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 游戏5 -->
+        <div class="game-card card-hover group sound-hover" data-category="action">
+          <div class="relative overflow-hidden rounded-xl">
+            <img src="https://picsum.photos/id/42/600/400" alt="赛博都市" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+              <div class="text-xs uppercase tracking-wider text-primary mb-2">动作 / 开放世界</div>
+              <h3 class="text-xl font-bold mb-2">赛博都市</h3>
+              <p class="text-gray-300 text-sm mb-4">在未来的赛博朋克世界中生存，揭露大型企业的黑暗秘密。</p>
+              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
+                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 游戏6 -->
+        <div class="game-card card-hover group sound-hover" data-category="adventure">
+          <div class="relative overflow-hidden rounded-xl">
+            <img src="https://picsum.photos/id/63/600/400" alt="海底世界" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+              <div class="text-xs uppercase tracking-wider text-primary mb-2">冒险 / 探索</div>
+              <h3 class="text-xl font-bold mb-2">海底世界</h3>
+              <p class="text-gray-300 text-sm mb-4">探索神秘的海底世界，发现未知的海洋生物和沉没的宝藏。</p>
+              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
+                了解更多 <i class="fa fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 游戏开发进度 -->
+      <div class="mt-20">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">即将推出</h2>
+          <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+          <p class="text-gray-400 max-w-3xl mx-auto">
+            关注我们正在开发的新项目，抢先了解最新进展
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- 开发中的游戏1 -->
+          <div class="bg-dark/60 rounded-xl overflow-hidden border border-gray-800">
+            <div class="relative">
+              <img src="https://picsum.photos/id/1035/800/450" alt="未来战士" class="w-full h-64 object-cover">
+              <div class="absolute top-4 left-4 bg-secondary/90 text-white px-4 py-2 rounded-full text-sm font-bold">
+                开发中
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">未来战士 2</h3>
+              <p class="text-gray-400 mb-4">
+                《星际战士》的续作，带来更激烈的战斗和更深入的剧情。预计2024年发布。
+              </p>
+              
+              <!-- 开发进度 -->
+              <div class="mb-4">
+                <div class="flex justify-between mb-2">
+                  <span class="text-gray-400">开发进度</span>
+                  <span class="text-primary font-bold">75%</span>
+                </div>
+                <div class="w-full h-3 bg-gray-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-primary to-accent rounded-full progress-bar" style="width: 75%"></div>
+                </div>
+              </div>
+              
+              <a href="#" class="inline-block px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary font-bold rounded-lg transition-all sound-click">
+                预约通知
+              </a>
+            </div>
+          </div>
+          
+          <!-- 开发中的游戏2 -->
+          <div class="bg-dark/60 rounded-xl overflow-hidden border border-gray-800">
+            <div class="relative">
+              <img src="https://picsum.photos/id/1011/800/450" alt="幻想世界" class="w-full h-64 object-cover">
+              <div class="absolute top-4 left-4 bg-secondary/90 text-white px-4 py-2 rounded-full text-sm font-bold">
+                开发中
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">幻想世界：新纪元</h3>
+              <p class="text-gray-400 mb-4">
+                全新的开放世界角色扮演游戏，拥有广阔的世界观和丰富的角色定制系统。预计2025年发布。
+              </p>
+              
+              <!-- 开发进度 -->
+              <div class="mb-4">
+                <div class="flex justify-between mb-2">
+                  <span class="text-gray-400">开发进度</span>
+                  <span class="text-primary font-bold">40%</span>
+                </div>
+                <div class="w-full h-3 bg-gray-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-primary to-accent rounded-full progress-bar" style="width: 40%"></div>
+                </div>
+              </div>
+              
+              <a href="#" class="inline-block px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary font-bold rounded-lg transition-all sound-click">
+                预约通知
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 玩家评价 -->
+  <section class="py-20 bg-dark">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">玩家评价</h2>
+        <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+        <p class="text-gray-400 max-w-3xl mx-auto">
+          听听我们的玩家对Project-X游戏的真实评价
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- 评价1 -->
+        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4 sound-hover">
+          <div class="text-yellow-400 mb-4">
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+          </div>
+          <p class="text-gray-300 mb-6 italic">
+            "《魔法传说》的开放世界设计令人惊叹，每个角落都充满了惊喜和挑战。剧情扣人心弦，角色塑造也很到位。绝对是今年最好的RPG游戏之一！"
+          </p>
+          <div class="flex items-center">
+            <img src="https://picsum.photos/id/64/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
+            <div>
+              <h4 class="font-bold">李明</h4>
+              <div class="text-gray-500 text-sm">资深游戏玩家</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 评价2 -->
+        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4 sound-hover">
+          <div class="text-yellow-400 mb-4">
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star-half-o"></i>
+          </div>
+          <p class="text-gray-300 mb-6 italic">
+            "《星际战士》的战斗系统非常流畅，打击感十足。画面效果也很震撼，尤其是太空战斗场景。期待续作的到来！"
+          </p>
+          <div class="flex items-center">
+            <img src="https://picsum.photos/id/65/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
+            <div>
+              <h4 class="font-bold">张华</h4>
+              <div class="text-gray-500 text-sm">游戏评测师</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 评价3 -->
+        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4 sound-hover">
+          <div class="text-yellow-400 mb-4">
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star-o"></i>
+          </div>
+          <p class="text-gray-300 mb-6 italic">
+            "《帝国争霸》让我沉迷了好几个月，策略深度和游戏平衡性都做得很好。每次战斗都需要仔细思考，胜利后的成就感满满。"
+          </p>
+          <div class="flex items-center">
+            <img src="https://picsum.photos/id/66/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
+            <div>
+              <h4 class="font-bold">王芳</h4>
+              <div class="text-gray-500 text-sm">策略游戏爱好者</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 下载游戏号召 -->
+  <section class="py-20 bg-gradient-to-r from-primary/30 to-accent/30">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-6">立即体验我们的游戏</h2>
+      <p class="text-gray-300 max-w-2xl mx-auto mb-8">
+        访问我们的官方商店或各大游戏平台，开始您的游戏之旅
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="#" class="flex items-center px-6 py-3 bg-dark/80 hover:bg-dark text-white font-bold rounded-lg transition-all shadow-lg sound-click">
+          <i class="fa fa-steam text-2xl mr-3"></i>
+          <span>Steam</span>
+        </a>
+        <a href="#" class="flex items-center px-6 py-3 bg-dark/80 hover:bg-dark text-white font-bold rounded-lg transition-all shadow-lg sound-click">
+          <i class="fa fa-apple text-2xl mr-3"></i>
+          <span>App Store</span>
+        </a>
+        <a href="#" class="flex items-center px-6 py-3 bg-dark/80 hover:bg-dark text-white font-bold rounded-lg transition-all shadow-lg sound-click">
+          <i class="fa fa-android text-2xl mr-3"></i>
+          <span>Google Play</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <div id="footer-container"></div>
+
+  <!-- 返回顶部按钮 -->
+  <button id="back-to-top" class="fixed bottom-6 right-6 w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white text-xl opacity-0 invisible transition-all z-50 sound-click">
+    <i class="fa fa-arrow-up"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script>
+    // 加载导航栏和页脚
+    document.addEventListener('DOMContentLoaded', function() {
+      // 加载导航栏
+      fetch('navbar.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('navbar-container').innerHTML = html;
+          
+          // 设置当前页面的导航链接为活动状态
+          const gamesLink = document.querySelector('a[href="games.html"]');
+          if (gamesLink) {
+            gamesLink.classList.add('active');
+          }
+          
+          // 初始化导航栏功能
+          initNavbar();
+        });
+      
+      // 加载页脚
+      fetch('footer.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('footer-container').innerHTML = html;
+        });
+      
+      // 加载音效
+      fetch('sounds.html')
+        .then(response => response.text())
+        .then(html => {
+          document.body.insertAdjacentHTML('beforeend', html);
+        });
+    });
+    
+    // 导航栏初始化函数
+    function initNavbar() {
+      const navbar = document.getElementById('navbar');
+      const backToTop = document.getElementById('back-to-top');
+      
+      // 导航栏滚动效果
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+          navbar.classList.add('bg-dark/95', 'backdrop-blur-lg', 'shadow-lg');
+          navbar.classList.remove('py-4');
+          navbar.classList.add('py-2');
+          
+          backToTop.classList.remove('opacity-0', 'invisible');
+          backToTop.classList.add('opacity-100', 'visible');
+        } else {
+          navbar.classList.remove('bg-dark/95', 'backdrop-blur-lg', 'shadow-lg');
+          navbar.classList.remove('py-2');
+          navbar.classList.add('py-4');
+          
+          backToTop.classList.add('opacity-0', 'invisible');
+          backToTop.classList.remove('opacity-100', 'visible');
+        }
+      });
+      
+      // 移动端菜单
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+          menuToggle.innerHTML = mobileMenu.classList.contains('hidden') ? 
+            '<i class="fa fa-bars"></i>' : '<i class="fa fa-times"></i>';
+          
+          // 播放点击音效
+          playClickSound();
+        });
+        
+        // 移动端菜单点击关闭
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+          link.addEventListener('click', function() {
+            mobileMenu.classList.add('hidden');
+            menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+          });
+        });
+      }
+      
+      // 返回顶部
+      backToTop.addEventListener('click', function() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+    
+    // 音效播放函数
+    function playClickSound() {
+      const clickSound = document.getElementById('click-sound');
+      if (clickSound) {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => console.log('无法播放音效:', e));
+      }
+    }
+    
+    function playHoverSound() {
+      const hoverSound = document.getElementById('hover-sound');
+      if (hoverSound) {
+        hoverSound.currentTime = 0;
+        hoverSound.play().catch(e => console.log('无法播放音效:', e));
+      }
+    }
+    
+    // 为带音效类的元素添加事件监听器
+    document.querySelectorAll('.sound-hover').forEach(element => {
+      element.addEventListener('mouseenter', playHoverSound);
+    });
+    
+    document.querySelectorAll('.sound-click').forEach(element => {
+      element.addEventListener('click', playClickSound);
+    });
+    
+    // 游戏筛选功能
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterButtons = document.querySelectorAll('.game-filter-btn');
+      const gameCards = document.querySelectorAll('.game-card');
+      
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          // 移除所有按钮的active状态
+          filterButtons.forEach(btn => {
+            btn.classList.remove('active', 'bg-primary', 'text-white');
+            btn.classList.add('bg-dark/60', 'text-gray-300');
+          });
+          
+          // 为当前点击的按钮添加active状态
+          button.classList.add('active', 'bg-primary', 'text-white');
+          button.classList.remove('bg-dark/60', 'text-gray-300');
+          
+          const filter = button.getAttribute('data-filter');
+          
+          // 筛选游戏卡片
+          gameCards.forEach(card => {
+            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+              card.style.display = 'block';
+              // 添加动画效果
+              setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'scale(1)';
+              }, 50);
+            } else {
+              card.style.opacity = '0';
+              card.style.transform = 'scale(0.95)';
+              setTimeout(() => {
+                card.style.display = 'none';
+              }, 300);
+            }
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>

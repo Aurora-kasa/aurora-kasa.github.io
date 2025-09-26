@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>联系我们 - Project-X 游戏工作室</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7652FF', // 主色调：紫色
+            secondary: '#FF6B6B', // 辅助色：红色
+            accent: '#00D2FF', // 强调色：青色
+            dark: '#121212', // 深色背景
+            light: '#F8F9FA', // 浅色文本
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义样式 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      .animate-pulse-slow {
+        animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    }
+    
+    /* 全局动画 */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+  
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #F8F9FA;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, rgba(118, 82, 255, 0.9), rgba(0, 210, 255, 0.9));
+    }
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background-color: #7652FF;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+    /* 表单输入框样式 */
+    .form-input {
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      border-color: #7652FF;
+      box-shadow: 0 0 0 3px rgba(118, 82, 255, 0.2);
+    }
+    /* 联系卡片动画 */
+    .contact-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body class="font-inter">
+  <!-- 导航栏 -->
+  <div id="navbar-container"></div>
+
+  <!-- 联系页面标题 -->
+  <section class="relative py-32 bg-dark overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <div class="absolute inset-0 bg-dark/90 z-10"></div>
+      <img src="https://picsum.photos/id/1076/1920/1080" alt="背景" class="absolute inset-0 w-full h-full object-cover opacity-40">
+    </div>
+    <div class="container mx-auto px-4 relative z-20 text-center">
+      <h1 class="text-[clamp(2rem,5vw,4rem)] font-extrabold mb-6">
+        <span class="bg-gradient-to-r from-primary to-accent text-gradient">联系我们</span>
+      </h1>
+      <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-300 max-w-2xl mx-auto">
+        无论您有任何问题或合作意向，都欢迎随时与我们联系，我们将尽快回复您
+      </p>
+    </div>
+  </section>
+
+  <!-- 联系信息 -->
+  <section class="py-20 bg-gradient-to-b from-dark to-dark/80">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-2 gap-16 items-start">
+        <!-- 联系表单 -->
+        <div class="bg-dark/60 p-8 md:p-12 rounded-xl border border-gray-800">
+          <h2 class="text-[clamp(1.5rem,4vw,2rem)] font-bold mb-6">发送消息</h2>
+          <p class="text-gray-400 mb-8">
+            请填写以下表单，我们的团队将在24小时内与您联系
+          </p>
+          
+          <form id="contact-form" class="space-y-6">
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <label for="name" class="block text-gray-300 mb-2">姓名</label>
+                <input type="text" id="name" name="name" class="form-input w-full px-4 py-3 bg-dark/80 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+              </div>
+              <div>
+                <label for="email" class="block text-gray-300 mb-2">邮箱</label>
+                <input type="email" id="email" name="email" class="form-input w-full px-4 py-3 bg-dark/80 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+              </div>
+            </div>
+            
+            <div>
+              <label for="subject" class="block text-gray-300 mb-2">主题</label>
+              <select id="subject" name="subject" class="form-input w-full px-4 py-3 bg-dark/80 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                <option value="">请选择主题</option>
+                <option value="cooperation">商务合作</option>
+                <option value="inquiry">咨询</option>
+                <option value="support">技术支持</option>
+                <option value="career">招聘咨询</option>
+                <option value="other">其他</option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="message" class="block text-gray-300 mb-2">消息内容</label>
+              <textarea id="message" name="message" rows="5" class="form-input w-full px-4 py-3 bg-dark/80 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50" required></textarea>
+            </div>
+            
+            <div class="flex items-center">
+              <input type="checkbox" id="privacy" name="privacy" class="w-4 h-4 text-primary focus:ring-primary/50 rounded" required>
+              <label for="privacy" class="ml-2 text-gray-400 text-sm">
+                我同意Project-X收集和处理我的个人信息，以回复我的咨询
+              </label>
+            </div>
+            
+            <button type="submit" class="w-full px-6 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all shadow-lg sound-click">
+              发送消息
+            </button>
+          </form>
+        </div>
+        
+        <!-- 联系信息 -->
+        <div>
+          <h2 class="text-[clamp(1.5rem,4vw,2rem)] font-bold mb-6">联系方式</h2>
+          <p class="text-gray-400 mb-8">
+            我们期待与您取得联系，以下是我们的联系方式和工作时间
+          </p>
+          
+          <div class="space-y-6 mb-12">
+            <!-- 地址 -->
+            <div class="contact-card bg-dark/60 p-6 rounded-xl border border-gray-800 hover:border-primary/50 transition-all sound-hover">
+              <div class="flex items-start">
+                <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary text-xl mr-6">
+                  <i class="fa fa-map-marker"></i>
+                </div>
+                <div>
+                  <h3 class="text-lg font-bold mb-2">地址</h3>
+                  <p class="text-gray-400">
+                    北京市海淀区中关村科技园8号楼15层
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 电话 -->
+            <div class="contact-card bg-dark/60 p-6 rounded-xl border border-gray-800 hover:border-primary/50 transition-all sound-hover">
+              <div class="flex items-start">
+                <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary text-xl mr-6">
+                  <i class="fa fa-phone"></i>
+                </div>
+                <div>
+                  <h3 class="text-lg font-bold mb-2">电话</h3>
+                  <p class="text-gray-400">
+                    +86 10 8888 7777
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 邮箱 -->
+            <div class="contact-card bg-dark/60 p-6 rounded-xl border border-gray-800 hover:border-primary/50 transition-all sound-hover">
+              <div class="flex items-start">
+                <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary text-xl mr-6">
+                  <i class="fa fa-envelope"></i>
+                </div>
+                <div>
+                  <h3 class="text-lg font-bold mb-2">邮箱</h3>
+                  <p class="text-gray-400">
+                    contact@projectx-games.com
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 工作时间 -->
+          <div class="bg-dark/60 p-6 rounded-xl border border-gray-800">
+            <h3 class="text-lg font-bold mb-4">工作时间</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span class="text-gray-400">周一至周五</span>
+                <span>9:00 - 18:00</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">周六</span>
+                <span>10:00 - 16:00</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">周日及法定节假日</span>
+                <span>休息</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 社交媒体 -->
+          <div class="mt-8">
+            <h3 class="text-lg font-bold mb-4">关注我们</h3>
+            <div class="flex space-x-4">
+              <a href="#" class="w-10 h-10 bg-dark/60 hover:bg-primary/20 border border-gray-800 hover:border-primary/50 rounded-full flex items-center justify-center text-gray-300 hover:text-primary transition-all sound-hover">
+                <i class="fa fa-weibo"></i>
+              </a>
+              <a href="#" class="w-10 h-10 bg-dark/60 hover:bg-primary/20 border border-gray-800 hover:border-primary/50 rounded-full flex items-center justify-center text-gray-300 hover:text-primary transition-all sound-hover">
+                <i class="fa fa-wechat"></i>
+              </a>
+              <a href="#" class="w-10 h-10 bg-dark/60 hover:bg-primary/20 border border-gray-800 hover:border-primary/50 rounded-full flex items-center justify-center text-gray-300 hover:text-primary transition-all sound-hover">
+                <i class="fa fa-twitter"></i>
+              </a>
+              <a href="#" class="w-10 h-10 bg-dark/60 hover:bg-primary/20 border border-gray-800 hover:border-primary/50 rounded-full flex items-center justify-center text-gray-300 hover:text-primary transition-all sound-hover">
+                <i class="fa fa-instagram"></i>
+              </a>
+              <a href="#" class="w-10 h-10 bg-dark/60 hover:bg-primary/20 border border-gray-800 hover:border-primary/50 rounded-full flex items-center justify-center text-gray-300 hover:text-primary transition-all sound-hover">
+                <i class="fa fa-youtube-play"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 地图 -->
+  <section class="py-12 bg-dark">
+    <div class="container mx-auto px-4">
+      <div class="rounded-xl overflow-hidden h-96 relative bg-dark/60 border border-gray-800">
+        <!-- 这里可以嵌入地图，但为了示例我们使用占位图 -->
+        <img src="https://picsum.photos/id/1031/1920/1080" alt="公司位置地图" class="w-full h-full object-cover opacity-60">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="bg-primary/90 text-white px-6 py-3 rounded-lg font-bold shadow-lg">
+            <i class="fa fa-map-marker mr-2"></i> Project-X 游戏工作室
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 常见问题 -->
+  <section class="py-20 bg-gradient-to-b from-dark to-dark/90">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">常见问题</h2>
+        <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+        <p class="text-gray-400 max-w-3xl mx-auto">
+          我们收集了一些客户经常咨询的问题，如果您有其他疑问，请随时联系我们
+        </p>
+      </div>
+      
+      <div class="max-w-3xl mx-auto">
+        <!-- FAQ 手风琴 -->
+        <div class="space-y-4">
+          <!-- FAQ 项目1 -->
+          <div class="faq-item bg-dark/60 rounded-xl border border-gray-800 overflow-hidden transition-all sound-hover">
+            <button class="faq-question w-full text-left px-6 py-4 font-bold flex justify-between items-center focus:outline-none">
+              <span>如何开始一个游戏项目合作？</span>
+              <i class="fa fa-chevron-down text-primary transition-transform"></i>
+            </button>
+            <div class="faq-answer px-6 py-0 max-h-0 overflow-hidden transition-all">
+              <div class="pb-4 text-gray-400">
+                您可以通过我们的联系表单、电话或邮箱与我们联系，我们的业务团队将在24小时内回复您。我们会安排一次初步会议，了解您的项目需求和愿景，然后提供详细的合作方案和报价。
+              </div>
+            </div>
+          </div>
+          
+          <!-- FAQ 项目2 -->
+          <div class="faq-item bg-dark/60 rounded-xl border border-gray-800 overflow-hidden transition-all sound-hover">
+            <button class="faq-question w-full text-left px-6 py-4 font-bold flex justify-between items-center focus:outline-none">
+              <span>一个游戏项目的开发周期是多久？</span>
+              <i class="fa fa-chevron-down text-primary transition-transform"></i>
+            </button>
+            <div class="faq-answer px-6 py-0 max-h-0 overflow-hidden transition-all">
+              <div class="pb-4 text-gray-400">
+                游戏开发周期取决于项目的规模和复杂度。小型移动游戏可能需要3-6个月，中型游戏可能需要6-12个月，而大型PC/主机游戏可能需要1-3年。我们会根据项目需求提供详细的时间规划。
+              </div>
+            </div>
+          </div>
+          
+          <!-- FAQ 项目3 -->
+          <div class="faq-item bg-dark/60 rounded-xl border border-gray-800 overflow-hidden transition-all sound-hover">
+            <button class="faq-question w-full text-left px-6 py-4 font-bold flex justify-between items-center focus:outline-none">
+              <span>您能为我们提供哪些平台的游戏开发服务？</span>
+              <i class="fa fa-chevron-down text-primary transition-transform"></i>
+            </button>
+            <div class="faq-answer px-6 py-0 max-h-0 overflow-hidden transition-all">
+              <div class="pb-4 text-gray-400">
+                我们提供多平台游戏开发服务，包括PC（Steam、Epic Games Store等）、主机平台（PlayStation、Xbox、Nintendo Switch）、移动平台（iOS、Android）以及VR/AR平台（Oculus、SteamVR、HoloLens等）。
+              </div>
+            </div>
+          </div>
+          
+          <!-- FAQ 项目4 -->
+          <div class="faq-item bg-dark/60 rounded-xl border border-gray-800 overflow-hidden transition-all sound-hover">
+            <button class="faq-question w-full text-left px-6 py-4 font-bold flex justify-between items-center focus:outline-none">
+              <span>您是否提供游戏上线后的维护和更新服务？</span>
+              <i class="fa fa-chevron-down text-primary transition-transform"></i>
+            </button>
+            <div class="faq-answer px-6 py-0 max-h-0 overflow-hidden transition-all">
+              <div class="pb-4 text-gray-400">
+                是的，我们提供游戏上线后的维护和更新服务。我们可以根据您的需求提供不同期限的技术支持和内容更新服务，确保游戏的稳定运行和持续改进。
+              </div>
+            </div>
+          </div>
+          
+          <!-- FAQ 项目5 -->
+          <div class="faq-item bg-dark/60 rounded-xl border border-gray-800 overflow-hidden transition-all sound-hover">
+            <button class="faq-question w-full text-left px-6 py-4 font-bold flex justify-between items-center focus:outline-none">
+              <span>贵公司目前是否有招聘计划？</span>
+              <i class="fa fa-chevron-down text-primary transition-transform"></i>
+            </button>
+            <div class="faq-answer px-6 py-0 max-h-0 overflow-hidden transition-all">
+              <div class="pb-4 text-gray-400">
+                我们一直在寻找优秀的游戏开发人才加入我们的团队。您可以关注我们的官网招聘页面或通过联系表单提交您的简历。我们会定期更新招聘信息，并在有合适的职位空缺时与您联系。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 招聘号召 -->
+  <section class="py-20 bg-gradient-to-r from-primary/30 to-accent/30">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-6">加入我们的团队</h2>
+      <p class="text-gray-300 max-w-2xl mx-auto mb-8">
+        我们正在寻找充满激情的游戏开发者，一起创造令人难忘的游戏体验
+      </p>
+      <a href="#" class="inline-block px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all shadow-lg text-lg sound-click">
+        查看招聘信息
+      </a>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <div id="footer-container"></div>
+
+  <!-- 返回顶部按钮 -->
+  <button id="back-to-top" class="fixed bottom-6 right-6 w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white text-xl opacity-0 invisible transition-all z-50 sound-click">
+    <i class="fa fa-arrow-up"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script>
+    // 加载导航栏和页脚
+    document.addEventListener('DOMContentLoaded', function() {
+      // 加载导航栏
+      fetch('navbar.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('navbar-container').innerHTML = html;
+          
+          // 设置当前页面的导航链接为活动状态
+          const contactLink = document.querySelector('a[href="contact.html"]');
+          if (contactLink) {
+            contactLink.classList.add('active');
+          }
+          
+          // 初始化导航栏功能
+          initNavbar();
+        });
+      
+      // 加载页脚
+      fetch('footer.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('footer-container').innerHTML = html;
+        });
+      
+      // 加载音效
+      fetch('sounds.html')
+        .then(response => response.text())
+        .then(html => {
+          document.body.insertAdjacentHTML('beforeend', html);
+        });
+      
+      // 初始化表单处理
+      initContactForm();
+      
+      // 初始化FAQ手风琴
+      initFaqAccordion();
+    });
+    
+    // 导航栏初始化函数
+    function initNavbar() {
+      const navbar = document.getElementById('navbar');
+      const backToTop = document.getElementById('back-to-top');
+      
+      // 导航栏滚动效果
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+          navbar.classList.add('bg-dark/95', 'backdrop-blur-lg', 'shadow-lg');
+          navbar.classList.remove('py-4');
+          navbar.classList.add('py-2');
+          
+          backToTop.classList.remove('opacity-0', 'invisible');
+          backToTop.classList.add('opacity-100', 'visible');
+        } else {
+          navbar.classList.remove('bg-dark/95', 'backdrop-blur-lg', 'shadow-lg');
+          navbar.classList.remove('py-2');
+          navbar.classList.add('py-4');
+          
+          backToTop.classList.add('opacity-0', 'invisible');
+          backToTop.classList.remove('opacity-100', 'visible');
+        }
+      });
+      
+      // 移动端菜单
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+          menuToggle.innerHTML = mobileMenu.classList.contains('hidden') ? 
+            '<i class="fa fa-bars"></i>' : '<i class="fa fa-times"></i>';
+          
+          // 播放点击音效
+          playClickSound();
+        });
+        
+        // 移动端菜单点击关闭
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+          link.addEventListener('click', function() {
+            mobileMenu.classList.add('hidden');
+            menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+          });
+        });
+      }
+      
+      // 返回顶部
+      backToTop.addEventListener('click', function() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+    
+    // 音效播放函数
+    function playClickSound() {
+      const clickSound = document.getElementById('click-sound');
+      if (clickSound) {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => console.log('无法播放音效:', e));
+      }
+    }
+    
+    function playHoverSound() {
+      const hoverSound = document.getElementById('hover-sound');
+      if (hoverSound) {
+        hoverSound.currentTime = 0;
+        hoverSound.play().catch(e => console.log('无法播放音效:', e));
+      }
+    }
+    
+    // 为带音效类的元素添加事件监听器
+    document.querySelectorAll('.sound-hover').forEach(element => {
+      element.addEventListener('mouseenter', playHoverSound);
+    });
+    
+    document.querySelectorAll('.sound-click').forEach(element => {
+      element.addEventListener('click', playClickSound);
+    });
+    
+    // 联系表单处理
+    function initContactForm() {
+      const contactForm = document.getElementById('contact-form');
+      
+      if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // 表单验证
+          const name = document.getElementById('name').value;
+          const email = document.getElementById('email').value;
+          const subject = document.getElementById('subject').value;
+          const message = document.getElementById('message').value;
+          const privacy = document.getElementById('privacy').checked;
+          
+          if (!name || !email || !subject || !message || !privacy) {
+            alert('请填写所有必填字段');
+            return;
+          }
+          
+          // 模拟表单提交
+          const submitButton = contactForm.querySelector('button[type="submit"]');
+          const originalText = submitButton.innerHTML;
+          
+          submitButton.disabled = true;
+          submitButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 发送中...';
+          
+          // 模拟请求延迟
+          setTimeout(() => {
+            submitButton.innerHTML = '<i class="fa fa-check mr-2"></i> 发送成功';
+            submitButton.classList.remove('bg-primary');
+            submitButton.classList.add('bg-green-600');
+            
+            // 重置表单
+            contactForm.reset();
+            
+            // 5秒后恢复按钮状态
+            setTimeout(() => {
+              submitButton.disabled = false;
+              submitButton.innerHTML = originalText;
+              submitButton.classList.remove('bg-green-600');
+              submitButton.classList.add('bg-primary');
+            }, 5000);
+          }, 2000);
+        });
+      }
+    }
+    
+    // FAQ手风琴初始化
+    function initFaqAccordion() {
+      const faqQuestions = document.querySelectorAll('.faq-question');
+      
+      faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+          const answer = question.nextElementSibling;
+          const icon = question.querySelector('i');
+          
+          // 切换当前FAQ项的状态
+          if (answer.style.maxHeight) {
+            answer.style.maxHeight = null;
+            answer.style.paddingTop = '0';
+            icon.style.transform = 'rotate(0deg)';
+          } else {
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            answer.style.paddingTop = '1rem';
+            icon.style.transform = 'rotate(180deg)';
+          }
+          
+          // 播放点击音效
+          playClickSound();
+        });
+      });
+    }
+  </script>
+</body>
+</html>

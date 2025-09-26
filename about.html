@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于我们 - Project-X 游戏工作室</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7652FF', // 主色调：紫色
+            secondary: '#FF6B6B', // 辅助色：红色
+            accent: '#00D2FF', // 强调色：青色
+            dark: '#121212', // 深色背景
+            light: '#F8F9FA', // 浅色文本
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义样式 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      .animate-pulse-slow {
+        animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    }
+    
+    /* 全局动画 */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+  </style>
+  
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #F8F9FA;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, rgba(118, 82, 255, 0.9), rgba(0, 210, 255, 0.9));
+    }
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background-color: #7652FF;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+    .progress-bar {
+      transition: width 1.5s ease-in-out;
+    }
+  </style>
+</head>
+<body class="font-inter">
+  <!-- 导航栏 -->
+  <div id="navbar-container"></div>
+
+  <!-- 关于我们页面标题 -->
+  <section class="relative py-32 bg-dark overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <div class="absolute inset-0 bg-dark/90 z-10"></div>
+      <img src="https://picsum.photos/id/1/1920/1080" alt="背景" class="absolute inset-0 w-full h-full object-cover opacity-40">
+    </div>
+    <div class="container mx-auto px-4 relative z-20 text-center">
+      <h1 class="text-[clamp(2rem,5vw,4rem)] font-extrabold mb-6">
+        <span class="bg-gradient-to-r from-primary to-accent text-gradient">关于我们</span>
+      </h1>
+      <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-300 max-w-2xl mx-auto">
+        探索 Project-X 的故事、价值观和我们对游戏艺术的热情
+      </p>
+    </div>
+  </section>
+
+  <!-- 关于我们内容 -->
+  <section class="py-20 bg-dark">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="order-2 md:order-1">
+          <h3 class="text-2xl font-bold mb-4">我们的故事</h3>
+          <p class="text-gray-400 mb-6">
+            成立于2018年，Project-X 从一个小型独立团队成长为行业内备受瞩目的游戏工作室。我们的愿景是通过游戏连接世界，为玩家带来无限可能。
+          </p>
+          <p class="text-gray-400 mb-8">
+            我们相信游戏不仅是娱乐，更是一种艺术表达和文化交流的方式。每款游戏背后都有一个独特的故事，我们致力于将这些故事生动地呈现给玩家。
+          </p>
+          
+          <!-- 数据统计 -->
+          <div class="grid grid-cols-2 gap-6">
+            <div class="text-center p-4 bg-dark/50 rounded-lg border border-gray-800">
+              <div class="text-4xl font-bold text-primary mb-2 counter" data-target="12">0</div>
+              <div class="text-gray-400">游戏作品</div>
+            </div>
+            <div class="text-center p-4 bg-dark/50 rounded-lg border border-gray-800">
+              <div class="text-4xl font-bold text-primary mb-2 counter" data-target="5">0</div>
+              <div class="text-gray-400">游戏奖项</div>
+            </div>
+            <div class="text-center p-4 bg-dark/50 rounded-lg border border-gray-800">
+              <div class="text-4xl font-bold text-primary mb-2 counter" data-target="25">0</div>
+              <div class="text-gray-400">团队成员</div>
+            </div>
+            <div class="text-center p-4 bg-dark/50 rounded-lg border border-gray-800">
+              <div class="text-4xl font-bold text-primary mb-2 counter" data-target="1000000">0</div>
+              <div class="text-gray-400">全球玩家</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="order-1 md:order-2 relative">
+          <div class="relative z-10 rounded-xl overflow-hidden shadow-2xl">
+            <img src="https://picsum.photos/id/1/800/600" alt="工作室照片" class="w-full h-auto">
+          </div>
+          <div class="absolute -bottom-6 -left-6 w-40 h-40 bg-primary/30 rounded-full filter blur-3xl z-0"></div>
+          <div class="absolute -top-6 -right-6 w-40 h-40 bg-accent/30 rounded-full filter blur-3xl z-0"></div>
+        </div>
+      </div>
+      
+      <!-- 我们的使命和愿景 -->
+      <div class="grid md:grid-cols-2 gap-8 mt-20">
+        <div class="bg-gradient-to-br from-dark to-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:translate-y-[-10px] sound-hover">
+          <div class="text-primary text-4xl mb-4">
+            <i class="fa fa-bullseye"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-4">我们的使命</h3>
+          <p class="text-gray-400">
+            通过创新技术和引人入胜的叙事，为玩家提供前所未有的游戏体验。我们致力于推动游戏行业的发展，创造能够跨越文化界限的作品。
+          </p>
+        </div>
+        
+        <div class="bg-gradient-to-br from-dark to-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:translate-y-[-10px] sound-hover">
+          <div class="text-accent text-4xl mb-4">
+            <i class="fa fa-eye"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-4">我们的愿景</h3>
+          <p class="text-gray-400">
+            成为全球领先的游戏开发工作室，打造具有持久影响力的经典游戏。我们希望通过游戏连接世界各地的玩家，创造共同的美好回忆。
+          </p>
+        </div>
+      </div>
+
+      <!-- 核心价值观 -->
+      <div class="mt-20">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">我们的核心价值观</h2>
+          <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- 价值观1 -->
+          <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4 sound-hover">
+            <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center text-primary mb-6">
+              <i class="fa fa-lightbulb-o text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4">创新</h3>
+            <p class="text-gray-400">
+              我们不断探索新的游戏机制、叙事方式和技术应用，勇于突破传统界限，为玩家带来新鲜体验。
+            </p>
+          </div>
+          
+          <!-- 价值观2 -->
+          <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4 sound-hover">
+            <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center text-primary mb-6">
+              <i class="fa fa-users text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4">团队协作</h3>
+            <p class="text-gray-400">
+              我们相信团队的力量，通过协作和沟通创造出超越个人能力的优秀作品，每个人的声音都受到重视。
+            </p>
+          </div>
+          
+          <!-- 价值观3 -->
+          <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4 sound-hover">
+            <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center text-primary mb-6">
+              <i class="fa fa-star text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4">品质至上</h3>
+            <p class="text-gray-400">
+              我们对每一个细节都精益求精，致力于打造高品质的游戏作品，不妥协于质量标准。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 发展历程 -->
+  <section class="py-20 bg-gradient-to-b from-dark to-dark/80">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">我们的发展历程</h2>
+        <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+        <p class="text-gray-400 max-w-3xl mx-auto">
+          见证 Project-X 从创立至今的重要里程碑和成长历程
+        </p>
+      </div>
+      
+      <div class="relative">
+        <!-- 时间线 -->
+        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-gray-800"></div>
+        
+        <!-- 里程碑1 -->
+        <div class="relative mb-16 md:mb-24">
+          <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0 md:text-right order-2 md:order-1">
+              <h3 class="text-xl font-bold mb-2">2018 - 工作室成立</h3>
+              <p class="text-gray-400">
+                Project-X 由一群热爱游戏的专业人士创立，开始了我们的游戏开发之旅。
+              </p>
+            </div>
+            <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-primary border-4 border-dark z-10"></div>
+            <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+              <div class="bg-dark/60 rounded-xl p-6 border border-gray-800 shadow-lg">
+                <img src="https://picsum.photos/id/3/600/400" alt="工作室成立" class="w-full h-auto rounded-lg">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 里程碑2 -->
+        <div class="relative mb-16 md:mb-24">
+          <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0 order-2">
+              <div class="bg-dark/60 rounded-xl p-6 border border-gray-800 shadow-lg">
+                <img src="https://picsum.photos/id/237/600/400" alt="首款游戏发布" class="w-full h-auto rounded-lg">
+              </div>
+            </div>
+            <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-primary border-4 border-dark z-10"></div>
+            <div class="md:w-1/2 md:pl-12 order-1 md:text-left">
+              <h3 class="text-xl font-bold mb-2">2019 - 首款游戏发布</h3>
+              <p class="text-gray-400">
+                我们的首款游戏《星际战士》正式发布，获得了玩家和媒体的好评。
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 里程碑3 -->
+        <div class="relative mb-16 md:mb-24">
+          <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0 md:text-right order-2 md:order-1">
+              <h3 class="text-xl font-bold mb-2">2020 - 团队扩张</h3>
+              <p class="text-gray-400">
+                随着业务的发展，我们的团队规模扩大到20人，引进了更多优秀人才。
+              </p>
+            </div>
+            <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-primary border-4 border-dark z-10"></div>
+            <div class="md:w-1/2 md:pl-12 order-1 md:order-2">
+              <div class="bg-dark/60 rounded-xl p-6 border border-gray-800 shadow-lg">
+                <img src="https://picsum.photos/id/20/600/400" alt="团队扩张" class="w-full h-auto rounded-lg">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 里程碑4 -->
+        <div class="relative">
+          <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0 order-2">
+              <div class="bg-dark/60 rounded-xl p-6 border border-gray-800 shadow-lg">
+                <img src="https://picsum.photos/id/42/600/400" alt="获得奖项" class="w-full h-auto rounded-lg">
+              </div>
+            </div>
+            <div class="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-primary border-4 border-dark z-10"></div>
+            <div class="md:w-1/2 md:pl-12 order-1 md:text-left">
+              <h3 class="text-xl font-bold mb-2">2023 - 获得行业奖项</h3>
+              <p class="text-gray-400">
+                我们的游戏《魔法传说》获得了年度最佳RPG游戏奖项，全球玩家突破100万。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系我们号召 -->
+  <section class="py-20 bg-gradient-to-r from-primary/30 to-accent/30">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-6">加入我们的旅程</h2>
+      <p class="text-gray-300 max-w-2xl mx-auto mb-8">
+        无论您是玩家、合作伙伴还是有才华的开发者，我们都期待与您一起创造精彩。
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="contact.html" class="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg sound-click">
+          联系我们
+        </a>
+        <a href="careers.html" class="px-8 py-4 bg-transparent border-2 border-white hover:border-primary text-white hover:text-primary font-bold rounded-lg transition-all transform hover:scale-105 sound-click">
+          加入团队
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <div id="footer-container"></div>
+
+  <!-- 返回顶部按钮 -->
+  <button id="back-to-top" class="fixed bottom-6 right-6 w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white text-xl opacity-0 invisible transition-all z-50 sound-click">
+    <i class="fa fa-arrow-up"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script>
+    // 加载导航栏和页脚
+    document.addEventListener('DOMContentLoaded', function() {
+      // 加载导航栏
+      fetch('navbar.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('navbar-container').innerHTML = html;
+          
+          // 设置当前页面的导航链接为活动状态
+          const aboutLink = document.querySelector('a[href="about.html"]');
+          if (aboutLink) {
+            aboutLink.classList.add('active');
+          }
+          
+          // 初始化导航栏功能（来自main.js的代码）
+          initNavbar();
+        });
+      
+      // 加载页脚
+      fetch('footer.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('footer-container').innerHTML = html;
+        });
+      
+      // 加载音效
+      fetch('sounds.html')
+        .then(response => response.text())
+        .then(html => {
+          document.body.insertAdjacentHTML('beforeend', html);
+        });
+    });
+    
+    // 导航栏初始化函数（从main.js复制的核心功能）
+    function initNavbar() {
+      const navbar = document.getElementById('navbar');
+      const backToTop = document.getElementById('back-to-top');
+      
+      // 导航栏滚动效果
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+          navbar.classList.add('bg-dark/95', 'backdrop-blur-lg', 'shadow-lg');
+          navbar.classList.remove('py-4');
+          navbar.classList.add('py-2');
+          
+          backToTop.classList.remove('opacity-0', 'invisible');
+          backToTop.classList.add('opacity-100', 'visible');
+        } else {
+          navbar.classList.remove('bg-dark/95', 'backdrop-blur-lg', 'shadow-lg');
+          navbar.classList.remove('py-2');
+          navbar.classList.add('py-4');
+          
+          backToTop.classList.add('opacity-0', 'invisible');
+          backToTop.classList.remove('opacity-100', 'visible');
+        }
+      });
+      
+      // 移动端菜单
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+          menuToggle.innerHTML = mobileMenu.classList.contains('hidden') ? 
+            '<i class="fa fa-bars"></i>' : '<i class="fa fa-times"></i>';
+          
+          // 播放点击音效
+          playClickSound();
+        });
+        
+        // 移动端菜单点击关闭
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+          link.addEventListener('click', function() {
+            mobileMenu.classList.add('hidden');
+            menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+          });
+        });
+      }
+      
+      // 返回顶部
+      backToTop.addEventListener('click', function() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+      
+      // 音效播放函数
+      function playClickSound() {
+        const clickSound = document.getElementById('click-sound');
+        if (clickSound) {
+          clickSound.currentTime = 0;
+          clickSound.play().catch(e => console.log('无法播放音效:', e));
+        }
+      }
+      
+      function playHoverSound() {
+        const hoverSound = document.getElementById('hover-sound');
+        if (hoverSound) {
+          hoverSound.currentTime = 0;
+          hoverSound.play().catch(e => console.log('无法播放音效:', e));
+        }
+      }
+      
+      // 为带音效类的元素添加事件监听器
+      document.querySelectorAll('.sound-hover').forEach(element => {
+        element.addEventListener('mouseenter', playHoverSound);
+      });
+      
+      document.querySelectorAll('.sound-click').forEach(element => {
+        element.addEventListener('click', playClickSound);
+      });
+    }
+    
+    // 数字计数动画
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200;
+    
+    const animateCounters = () => {
+      counters.forEach(counter => {
+        const target = +counter.getAttribute('data-target');
+        const count = +counter.innerText;
+        const inc = target / speed;
+        
+        if (count < target) {
+          counter.innerText = Math.ceil(count + inc);
+          setTimeout(animateCounters, 1);
+        } else {
+          counter.innerText = counter.getAttribute('data-target');
+        }
+      });
+    };
+    
+    // 监听元素是否进入视口
+    const observerOptions = {
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (entry.target.classList.contains('counter')) {
+            // 延迟启动计数动画
+            setTimeout(() => {
+              animateCounters();
+            }, 300);
+          }
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    // 观察所有计数器元素
+    counters.forEach(counter => {
+      observer.observe(counter);
+    });
+  </script>
+</body>
+</html>
