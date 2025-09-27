@@ -138,179 +138,150 @@
   <!-- 游戏作品 -->
   <section id="games" class="py-20 bg-gradient-to-b from-dark to-dark/80">
     <div class="container mx-auto px-4">
-      <!-- 游戏筛选 -->
-      <div class="flex flex-wrap justify-center gap-4 mb-12">
-        <button class="game-filter-btn active px-6 py-2 rounded-full bg-primary text-white font-medium transition-all sound-click" data-filter="all">全部</button>
-        <button class="game-filter-btn px-6 py-2 rounded-full bg-dark/60 text-gray-300 hover:bg-primary/90 hover:text-white font-medium transition-all sound-click" data-filter="action">动作</button>
-        <button class="game-filter-btn px-6 py-2 rounded-full bg-dark/60 text-gray-300 hover:bg-primary/90 hover:text-white font-medium transition-all sound-click" data-filter="adventure">冒险</button>
-        <button class="game-filter-btn px-6 py-2 rounded-full bg-dark/60 text-gray-300 hover:bg-primary/90 hover:text-white font-medium transition-all sound-click" data-filter="rpg">角色扮演</button>
-        <button class="game-filter-btn px-6 py-2 rounded-full bg-dark/60 text-gray-300 hover:bg-primary/90 hover:text-white font-medium transition-all sound-click" data-filter="strategy">策略</button>
-      </div>
-      
       <!-- 游戏作品展示 -->
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- 游戏1 -->
-        <div class="game-card card-hover group sound-hover" data-category="action">
+      <div class="flex justify-center">
+        <!-- 星域长剑：零重力逃脱 -->
+        <div class="game-card card-hover group w-full max-w-3xl">
           <div class="relative overflow-hidden rounded-xl">
-            <img src="https://picsum.photos/id/237/600/400" alt="星际战士" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-              <div class="text-xs uppercase tracking-wider text-primary mb-2">动作 / 射击</div>
-              <h3 class="text-xl font-bold mb-2">星际战士</h3>
-              <p class="text-gray-300 text-sm mb-4">一款激烈的太空战斗游戏，玩家将扮演星际战士与外星侵略者战斗。</p>
-              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
-                了解更多 <i class="fa fa-arrow-right ml-2"></i>
-              </a>
+            <!-- 添加开发中状态标签 -->
+            <div class="absolute top-4 left-4 bg-secondary/90 text-white px-4 py-2 rounded-full text-sm font-bold z-20">
+              Developing...
             </div>
-          </div>
-        </div>
-        
-        <!-- 游戏2 -->
-        <div class="game-card card-hover group sound-hover" data-category="adventure">
-          <div class="relative overflow-hidden rounded-xl">
-            <img src="https://picsum.photos/id/29/600/400" alt="神秘探险" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-              <div class="text-xs uppercase tracking-wider text-primary mb-2">冒险 / 解谜</div>
-              <h3 class="text-xl font-bold mb-2">神秘探险</h3>
-              <p class="text-gray-300 text-sm mb-4">探索古老遗迹，解开隐藏的谜题，发现失落的文明秘密。</p>
-              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
-                了解更多 <i class="fa fa-arrow-right ml-2"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-        
-        <!-- 游戏3 -->
-        <div class="game-card card-hover group sound-hover" data-category="rpg">
-          <div class="relative overflow-hidden rounded-xl">
-            <img src="https://picsum.photos/id/119/600/400" alt="魔法传说" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-              <div class="text-xs uppercase tracking-wider text-primary mb-2">角色扮演 / 开放世界</div>
-              <h3 class="text-xl font-bold mb-2">魔法传说</h3>
-              <p class="text-gray-300 text-sm mb-4">在充满魔法的世界中冒险，选择自己的道路，成为传奇英雄。</p>
-              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
-                了解更多 <i class="fa fa-arrow-right ml-2"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-        
-        <!-- 游戏4 -->
-        <div class="game-card card-hover group sound-hover" data-category="strategy">
-          <div class="relative overflow-hidden rounded-xl">
-            <img src="https://picsum.photos/id/30/600/400" alt="帝国争霸" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-              <div class="text-xs uppercase tracking-wider text-primary mb-2">策略 / 建造</div>
-              <h3 class="text-xl font-bold mb-2">帝国争霸</h3>
-              <p class="text-gray-300 text-sm mb-4">建造和管理自己的帝国，发展经济，训练军队，征服世界。</p>
-              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
-                了解更多 <i class="fa fa-arrow-right ml-2"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-        
-        <!-- 游戏5 -->
-        <div class="game-card card-hover group sound-hover" data-category="action">
-          <div class="relative overflow-hidden rounded-xl">
-            <img src="https://picsum.photos/id/42/600/400" alt="赛博都市" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-              <div class="text-xs uppercase tracking-wider text-primary mb-2">动作 / 开放世界</div>
-              <h3 class="text-xl font-bold mb-2">赛博都市</h3>
-              <p class="text-gray-300 text-sm mb-4">在未来的赛博朋克世界中生存，揭露大型企业的黑暗秘密。</p>
-              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
-                了解更多 <i class="fa fa-arrow-right ml-2"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-        
-        <!-- 游戏6 -->
-        <div class="game-card card-hover group sound-hover" data-category="adventure">
-          <div class="relative overflow-hidden rounded-xl">
-            <img src="https://picsum.photos/id/63/600/400" alt="海底世界" class="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110">
-            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-              <div class="text-xs uppercase tracking-wider text-primary mb-2">冒险 / 探索</div>
-              <h3 class="text-xl font-bold mb-2">海底世界</h3>
-              <p class="text-gray-300 text-sm mb-4">探索神秘的海底世界，发现未知的海洋生物和沉没的宝藏。</p>
-              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors sound-click">
-                了解更多 <i class="fa fa-arrow-right ml-2"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 游戏开发进度 -->
-      <div class="mt-20">
-        <div class="text-center mb-16">
-          <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">即将推出</h2>
-          <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
-          <p class="text-gray-400 max-w-3xl mx-auto">
-            关注我们正在开发的新项目，抢先了解最新进展
-          </p>
-        </div>
-        
-        <div class="grid md:grid-cols-2 gap-8">
-          <!-- 开发中的游戏1 -->
-          <div class="bg-dark/60 rounded-xl overflow-hidden border border-gray-800">
-            <div class="relative">
-              <img src="https://picsum.photos/id/1035/800/450" alt="未来战士" class="w-full h-64 object-cover">
-              <div class="absolute top-4 left-4 bg-secondary/90 text-white px-4 py-2 rounded-full text-sm font-bold">
-                开发中
-              </div>
-            </div>
-            <div class="p-6">
-              <h3 class="text-xl font-bold mb-2">未来战士 2</h3>
-              <p class="text-gray-400 mb-4">
-                《星际战士》的续作，带来更激烈的战斗和更深入的剧情。预计2024年发布。
-              </p>
+            <img src="https://picsum.photos/id/1/1200/600" alt="星域长剑：零重力逃脱" class="w-full h-80 md:h-96 object-cover transition-transform duration-700 group-hover:scale-110">
+            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+              <div class="text-xs uppercase tracking-wider text-primary mb-2">动作 / 冒险 / 科幻</div>
+              <h3 class="text-2xl md:text-3xl font-bold mb-3">星域长剑：零重力逃脱</h3>
+              <p class="text-gray-300 mb-6">在广阔的宇宙空间中展开一场惊心动魄的冒险，玩家将扮演星际战士，在零重力环境下与敌人战斗，解开宇宙的奥秘。</p>
               
               <!-- 开发进度 -->
-              <div class="mb-4">
+              <div class="mb-6">
                 <div class="flex justify-between mb-2">
                   <span class="text-gray-400">开发进度</span>
-                  <span class="text-primary font-bold">75%</span>
+                  <span class="text-primary font-bold">30%</span>
                 </div>
                 <div class="w-full h-3 bg-gray-800 rounded-full overflow-hidden">
-                  <div class="h-full bg-gradient-to-r from-primary to-accent rounded-full progress-bar" style="width: 75%"></div>
+                  <div class="h-full bg-gradient-to-r from-primary to-accent rounded-full progress-bar" style="width: 30%"></div>
                 </div>
               </div>
               
-              <a href="#" class="inline-block px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary font-bold rounded-lg transition-all sound-click">
-                预约通知
+              <div class="flex items-center mb-4">
+                <i class="fa fa-calendar text-primary mr-2"></i>
+                <span class="text-gray-300">预计发布：2026年</span>
+              </div>
+              
+              <a href="#" class="inline-flex items-center text-accent hover:text-white transition-colors">
+                预约通知 <i class="fa fa-arrow-right ml-2"></i>
               </a>
             </div>
           </div>
           
-          <!-- 开发中的游戏2 -->
-          <div class="bg-dark/60 rounded-xl overflow-hidden border border-gray-800">
-            <div class="relative">
-              <img src="https://picsum.photos/id/1011/800/450" alt="幻想世界" class="w-full h-64 object-cover">
-              <div class="absolute top-4 left-4 bg-secondary/90 text-white px-4 py-2 rounded-full text-sm font-bold">
-                开发中
+          <!-- 游戏详情 -->
+          <div class="mt-8 bg-dark/60 rounded-xl p-6 border border-gray-800">
+            <h4 class="text-xl font-bold mb-4">游戏特色</h4>
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <ul class="space-y-3">
+                  <li class="flex items-start">
+                    <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                    <span>创新的零重力战斗系统，提供独特的游戏体验</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                    <span>广阔的宇宙空间探索，包含超过50个可探索星球</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                    <span>深度角色定制系统，打造专属星际战士</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <ul class="space-y-3">
+                  <li class="flex items-start">
+                    <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                    <span>史诗级剧情，揭开宇宙文明的神秘面纱</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                    <span>支持多人合作模式，与好友一起征服宇宙</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                    <span>次世代画质，呈现震撼的宇宙奇观</span>
+                  </li>
+                </ul>
               </div>
             </div>
-            <div class="p-6">
-              <h3 class="text-xl font-bold mb-2">幻想世界：新纪元</h3>
-              <p class="text-gray-400 mb-4">
-                全新的开放世界角色扮演游戏，拥有广阔的世界观和丰富的角色定制系统。预计2025年发布。
-              </p>
-              
-              <!-- 开发进度 -->
-              <div class="mb-4">
-                <div class="flex justify-between mb-2">
-                  <span class="text-gray-400">开发进度</span>
-                  <span class="text-primary font-bold">40%</span>
+            
+            <!-- 开发计划 -->
+            <div class="mt-8">
+              <h4 class="text-xl font-bold mb-4">开发计划</h4>
+              <div class="bg-dark/40 p-6 rounded-lg">
+                <div class="mb-4">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-medium">核心引擎开发</span>
+                    <span class="text-green-400">完成</span>
+                  </div>
+                  <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 rounded-full" style="width: 100%"></div>
+                  </div>
                 </div>
-                <div class="w-full h-3 bg-gray-800 rounded-full overflow-hidden">
-                  <div class="h-full bg-gradient-to-r from-primary to-accent rounded-full progress-bar" style="width: 40%"></div>
+                <div class="mb-4">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-medium">零重力物理系统</span>
+                    <span class="text-yellow-400">进行中</span>
+                  </div>
+                  <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-yellow-500 rounded-full" style="width: 60%"></div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-medium">宇宙地图构建</span>
+                    <span class="text-yellow-400">进行中</span>
+                  </div>
+                  <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-yellow-500 rounded-full" style="width: 40%"></div>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-medium">角色模型与动画</span>
+                    <span class="text-yellow-400">进行中</span>
+                  </div>
+                  <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-yellow-500 rounded-full" style="width: 35%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-medium">剧情与任务设计</span>
+                    <span class="text-gray-400">未开始</span>
+                  </div>
+                  <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-gray-600 rounded-full" style="width: 0%"></div>
+                  </div>
                 </div>
               </div>
-              
-              <a href="#" class="inline-block px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary font-bold rounded-lg transition-all sound-click">
-                预约通知
-              </a>
             </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 游戏预告片 -->
+      <div class="mt-16">
+        <div class="text-center mb-10">
+          <h2 class="text-2xl md:text-3xl font-bold mb-4">游戏预告片</h2>
+          <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+        </div>
+        
+        <div class="relative aspect-video bg-dark/60 rounded-xl overflow-hidden">
+          <!-- 视频占位图 -->
+          <img src="https://picsum.photos/id/1035/1600/900" alt="游戏预告片" class="w-full h-full object-cover">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <button class="w-20 h-20 bg-primary/80 hover:bg-primary rounded-full flex items-center justify-center transition-all">
+              <i class="fa fa-play text-white text-2xl"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -321,16 +292,16 @@
   <section class="py-20 bg-dark">
     <div class="container mx-auto px-4">
       <div class="text-center mb-16">
-        <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">玩家评价</h2>
+        <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">封闭测试玩家评价</h2>
         <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
         <p class="text-gray-400 max-w-3xl mx-auto">
-          听听我们的玩家对Project-X游戏的真实评价
+          听听参与封闭测试的玩家对《星域长剑：零重力逃脱》的真实评价
         </p>
       </div>
       
       <div class="grid md:grid-cols-3 gap-8">
         <!-- 评价1 -->
-        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4 sound-hover">
+        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4">
           <div class="text-yellow-400 mb-4">
             <i class="fa fa-star"></i>
             <i class="fa fa-star"></i>
@@ -339,19 +310,20 @@
             <i class="fa fa-star"></i>
           </div>
           <p class="text-gray-300 mb-6 italic">
-            "《魔法传说》的开放世界设计令人惊叹，每个角落都充满了惊喜和挑战。剧情扣人心弦，角色塑造也很到位。绝对是今年最好的RPG游戏之一！"
+            "零重力战斗系统太惊艳了！在太空中自由移动和战斗的感觉前所未有的新鲜。游戏剧情也很吸引人，迫不及待想知道后续发展。"<br><br>
+            <span class="text-primary">— 来自《星域长剑：零重力逃脱》封测玩家</span>
           </p>
           <div class="flex items-center">
             <img src="https://picsum.photos/id/64/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
             <div>
-              <h4 class="font-bold">李明</h4>
-              <div class="text-gray-500 text-sm">资深游戏玩家</div>
+              <h4 class="font-bold">闲的没事干</h4>
+              <div class="text-gray-500 text-sm">封测参与者</div>
             </div>
           </div>
         </div>
         
         <!-- 评价2 -->
-        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4 sound-hover">
+        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4">
           <div class="text-yellow-400 mb-4">
             <i class="fa fa-star"></i>
             <i class="fa fa-star"></i>
@@ -360,34 +332,36 @@
             <i class="fa fa-star-half-o"></i>
           </div>
           <p class="text-gray-300 mb-6 italic">
-            "《星际战士》的战斗系统非常流畅，打击感十足。画面效果也很震撼，尤其是太空战斗场景。期待续作的到来！"
+            "画面效果震撼，太空场景美得让人窒息。角色定制系统也很丰富，我花了好几个小时打造我的星际战士。战斗手感流畅，值得推荐！"<br><br>
+            <span class="text-primary">— 来自《星域长剑：零重力逃脱》封测玩家</span>
           </p>
           <div class="flex items-center">
             <img src="https://picsum.photos/id/65/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
             <div>
-              <h4 class="font-bold">张华</h4>
-              <div class="text-gray-500 text-sm">游戏评测师</div>
+              <h4 class="font-bold">银河猎手</h4>
+              <div class="text-gray-500 text-sm">封测参与者</div>
             </div>
           </div>
         </div>
         
         <!-- 评价3 -->
-        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4 sound-hover">
+        <div class="bg-dark/60 p-8 rounded-xl border border-gray-800 transform transition-all hover:-translate-y-4">
           <div class="text-yellow-400 mb-4">
             <i class="fa fa-star"></i>
             <i class="fa fa-star"></i>
             <i class="fa fa-star"></i>
             <i class="fa fa-star"></i>
-            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star"></i>
           </div>
           <p class="text-gray-300 mb-6 italic">
-            "《帝国争霸》让我沉迷了好几个月，策略深度和游戏平衡性都做得很好。每次战斗都需要仔细思考，胜利后的成就感满满。"
+            "多人模式太棒了！和朋友一起探索宇宙，共同完成任务的感觉超级棒。游戏优化也做得很好，我的老电脑都能流畅运行。期待未来的更新！"<br><br>
+            <span class="text-primary">— 来自《星域长剑：零重力逃脱》封测玩家</span>
           </p>
           <div class="flex items-center">
             <img src="https://picsum.photos/id/66/100/100" alt="玩家头像" class="w-12 h-12 rounded-full object-cover mr-4">
             <div>
-              <h4 class="font-bold">王芳</h4>
-              <div class="text-gray-500 text-sm">策略游戏爱好者</div>
+              <h4 class="font-bold">太空战士</h4>
+              <div class="text-gray-500 text-sm">封测参与者</div>
             </div>
           </div>
         </div>
@@ -395,27 +369,22 @@
     </div>
   </section>
 
-  <!-- 下载游戏号召 -->
+  <!-- 预约游戏号召 -->
   <section class="py-20 bg-gradient-to-r from-primary/30 to-accent/30">
     <div class="container mx-auto px-4 text-center">
-      <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-6">立即体验我们的游戏</h2>
+      <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-6">预约《星域长剑：零重力逃脱》</h2>
       <p class="text-gray-300 max-w-2xl mx-auto mb-8">
-        访问我们的官方商店或各大游戏平台，开始您的游戏之旅
+        立即预约，抢先体验精彩内容，获取独家游戏内奖励
       </p>
-      <div class="flex flex-wrap justify-center gap-4">
-        <a href="#" class="flex items-center px-6 py-3 bg-dark/80 hover:bg-dark text-white font-bold rounded-lg transition-all shadow-lg sound-click">
-          <i class="fa fa-steam text-2xl mr-3"></i>
-          <span>Steam</span>
-        </a>
-        <a href="#" class="flex items-center px-6 py-3 bg-dark/80 hover:bg-dark text-white font-bold rounded-lg transition-all shadow-lg sound-click">
-          <i class="fa fa-apple text-2xl mr-3"></i>
-          <span>App Store</span>
-        </a>
-        <a href="#" class="flex items-center px-6 py-3 bg-dark/80 hover:bg-dark text-white font-bold rounded-lg transition-all shadow-lg sound-click">
-          <i class="fa fa-android text-2xl mr-3"></i>
-          <span>Google Play</span>
-        </a>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <input type="email" placeholder="输入您的邮箱地址" class="px-6 py-3 bg-dark/60 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-80">
+        <button class="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all w-full sm:w-auto">
+          立即预约
+        </button>
       </div>
+      <p class="text-gray-400 text-sm">
+        预约成功后，我们会通过邮件通知您游戏开发的最新进展和测试资格
+      </p>
     </div>
   </section>
 
@@ -423,7 +392,7 @@
   <div id="footer-container"></div>
 
   <!-- 返回顶部按钮 -->
-  <button id="back-to-top" class="fixed bottom-6 right-6 w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white text-xl opacity-0 invisible transition-all z-50 sound-click">
+  <button id="back-to-top" class="fixed bottom-6 right-6 w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white text-xl opacity-0 invisible transition-all z-50">
     <i class="fa fa-arrow-up"></i>
   </button>
 
@@ -452,13 +421,6 @@
         .then(response => response.text())
         .then(html => {
           document.getElementById('footer-container').innerHTML = html;
-        });
-      
-      // 加载音效
-      fetch('sounds.html')
-        .then(response => response.text())
-        .then(html => {
-          document.body.insertAdjacentHTML('beforeend', html);
         });
     });
     
@@ -495,9 +457,6 @@
           mobileMenu.classList.toggle('hidden');
           menuToggle.innerHTML = mobileMenu.classList.contains('hidden') ? 
             '<i class="fa fa-bars"></i>' : '<i class="fa fa-times"></i>';
-          
-          // 播放点击音效
-          playClickSound();
         });
         
         // 移动端菜单点击关闭
@@ -517,72 +476,6 @@
         });
       });
     }
-    
-    // 音效播放函数
-    function playClickSound() {
-      const clickSound = document.getElementById('click-sound');
-      if (clickSound) {
-        clickSound.currentTime = 0;
-        clickSound.play().catch(e => console.log('无法播放音效:', e));
-      }
-    }
-    
-    function playHoverSound() {
-      const hoverSound = document.getElementById('hover-sound');
-      if (hoverSound) {
-        hoverSound.currentTime = 0;
-        hoverSound.play().catch(e => console.log('无法播放音效:', e));
-      }
-    }
-    
-    // 为带音效类的元素添加事件监听器
-    document.querySelectorAll('.sound-hover').forEach(element => {
-      element.addEventListener('mouseenter', playHoverSound);
-    });
-    
-    document.querySelectorAll('.sound-click').forEach(element => {
-      element.addEventListener('click', playClickSound);
-    });
-    
-    // 游戏筛选功能
-    document.addEventListener('DOMContentLoaded', function() {
-      const filterButtons = document.querySelectorAll('.game-filter-btn');
-      const gameCards = document.querySelectorAll('.game-card');
-      
-      filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          // 移除所有按钮的active状态
-          filterButtons.forEach(btn => {
-            btn.classList.remove('active', 'bg-primary', 'text-white');
-            btn.classList.add('bg-dark/60', 'text-gray-300');
-          });
-          
-          // 为当前点击的按钮添加active状态
-          button.classList.add('active', 'bg-primary', 'text-white');
-          button.classList.remove('bg-dark/60', 'text-gray-300');
-          
-          const filter = button.getAttribute('data-filter');
-          
-          // 筛选游戏卡片
-          gameCards.forEach(card => {
-            if (filter === 'all' || card.getAttribute('data-category') === filter) {
-              card.style.display = 'block';
-              // 添加动画效果
-              setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'scale(1)';
-              }, 50);
-            } else {
-              card.style.opacity = '0';
-              card.style.transform = 'scale(0.95)';
-              setTimeout(() => {
-                card.style.display = 'none';
-              }, 300);
-            }
-          });
-        });
-      });
-    });
   </script>
 </body>
 </html>
