@@ -275,8 +275,23 @@
           <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
         </div>
         
+        <!-- 方法1：视频播放器（推荐） -->
         <div class="relative aspect-video bg-dark/60 rounded-xl overflow-hidden">
-          <!-- 视频占位图 -->
+          <!-- 使用HTML5视频播放器 -->
+          <video 
+            controls 
+            poster="https://picsum.photos/id/1035/1600/900" 
+            class="w-full h-full object-contain"
+          >
+            <source src="#" type="video/mp4">
+            <!-- 替换 # 为您的视频URL，例如：http://example.com/trailer.mp4 -->
+            您的浏览器不支持HTML5视频播放。
+          </video>
+        </div>
+        
+        <!-- 方法2：点击跳转视频（可选，使用时请注释掉方法1） -->
+        <!--
+        <div class="relative aspect-video bg-dark/60 rounded-xl overflow-hidden cursor-pointer" onclick="window.open('#', '_blank')">
           <img src="https://picsum.photos/id/1035/1600/900" alt="游戏预告片" class="w-full h-full object-cover">
           <div class="absolute inset-0 flex items-center justify-center">
             <button class="w-20 h-20 bg-primary/80 hover:bg-primary rounded-full flex items-center justify-center transition-all">
@@ -284,9 +299,10 @@
             </button>
           </div>
         </div>
+        -->
       </div>
-    </div>
   </section>
+
 
   <!-- 玩家评价 -->
   <section class="py-20 bg-dark">
