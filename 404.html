@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - 页面未找到 - Project-X 游戏工作室</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7652FF', // 主色调：紫色
+            secondary: '#FF6B6B', // 辅助色：红色
+            accent: '#00D2FF', // 强调色：青色
+            dark: '#121212', // 深色背景
+            light: '#F8F9FA', // 浅色文本
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义样式 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      .animate-pulse-slow {
+        animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .animate-spin-slow {
+        animation: spin 15s linear infinite;
+      }
+      .glow {
+        filter: drop-shadow(0 0 8px rgba(118, 82, 255, 0.8));
+      }
+    }
+    
+    /* 全局动画 */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    @keyframes float-reverse {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(20px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    @keyframes float-random {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      33% { transform: translateY(-15px) rotate(2deg); }
+      66% { transform: translateY(10px) rotate(-2deg); }
+    }
+    
+    .floating-element-1 {
+      animation: float 7s ease-in-out infinite;
+    }
+    
+    .floating-element-2 {
+      animation: float-reverse 8s ease-in-out infinite;
+    }
+    
+    .floating-element-3 {
+      animation: float-random 9s ease-in-out infinite;
+    }
+    
+    .floating-element-4 {
+      animation: float-random 6s ease-in-out infinite;
+    }
+    
+    .floating-element-5 {
+      animation: float-reverse 7.5s ease-in-out infinite;
+    }
+  </style>
+  
+  <style>
+    html, body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #F8F9FA;
+      height: 100%;
+      overflow-x: hidden;
+    }
+    
+    .space-bg {
+      background-image: 
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(rgba(118, 82, 255, 0.3) 1px, transparent 1px);
+      background-size: 50px 50px;
+      background-position: 0 0, 25px 25px;
+    }
+    
+    .error-glow {
+      text-shadow: 0 0 15px rgba(118, 82, 255, 0.8), 0 0 30px rgba(0, 210, 255, 0.5);
+    }
+    
+    .btn-hover-effect {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-hover-effect::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(118, 82, 255, 0.3), transparent);
+      transition: all 0.6s ease;
+    }
+    
+    .btn-hover-effect:hover::before {
+      left: 100%;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- 顶部导航栏 -->
+  <header class="py-4 px-6 md:px-10 bg-dark/90 backdrop-blur-md border-b border-gray-800">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="index.html" class="flex items-center space-x-2">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+          <span class="text-white font-bold text-xl">PX</span>
+        </div>
+        <span class="text-xl font-bold">Project-X</span>
+      </a>
+      
+      <!-- 桌面导航 -->
+      <nav class="hidden md:flex items-center space-x-8">
+        <a href="index.html" class="text-gray-300 hover:text-white transition-colors nav-link">首页</a>
+        <a href="about.html" class="text-gray-300 hover:text-white transition-colors nav-link">关于我们</a>
+        <a href="games.html" class="text-gray-300 hover:text-white transition-colors nav-link">游戏作品</a>
+        <a href="services.html" class="text-gray-300 hover:text-white transition-colors nav-link">服务</a>
+        <a href="contact.html" class="text-gray-300 hover:text-white transition-colors nav-link">联系我们</a>
+      </nav>
+      
+      <!-- 移动端菜单按钮 -->
+      <button class="md:hidden text-gray-300 hover:text-white" id="mobile-menu-button">
+        <i class="fa fa-bars text-xl"></i>
+      </button>
+    </div>
+    
+    <!-- 移动端导航菜单 -->
+    <div class="md:hidden hidden mt-4 pb-4 px-4" id="mobile-menu">
+      <nav class="flex flex-col space-y-4">
+        <a href="index.html" class="text-gray-300 hover:text-white transition-colors py-2">首页</a>
+        <a href="about.html" class="text-gray-300 hover:text-white transition-colors py-2">关于我们</a>
+        <a href="games.html" class="text-gray-300 hover:text-white transition-colors py-2">游戏作品</a>
+        <a href="services.html" class="text-gray-300 hover:text-white transition-colors py-2">服务</a>
+        <a href="contact.html" class="text-gray-300 hover:text-white transition-colors py-2">联系我们</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 主要内容区域 -->
+  <main class="flex-grow relative flex items-center justify-center overflow-hidden">
+    <!-- 太空背景和漂浮元素 -->
+    <div class="absolute inset-0 space-bg opacity-20"></div>
+    
+    <!-- 漂浮的太空元素 -->
+    <div class="absolute top-20 left-[10%] w-12 h-12 bg-primary/30 rounded-full blur-xl floating-element-1"></div>
+    <div class="absolute top-[30%] right-[15%] w-20 h-20 bg-accent/20 rounded-full blur-xl floating-element-2"></div>
+    <div class="absolute bottom-[20%] left-[15%] w-16 h-16 bg-secondary/30 rounded-full blur-xl floating-element-3"></div>
+    <div class="absolute top-[40%] left-[25%] w-8 h-8 bg-primary/40 rounded-full blur-xl floating-element-4"></div>
+    <div class="absolute bottom-[30%] right-[20%] w-10 h-10 bg-accent/30 rounded-full blur-xl floating-element-5"></div>
+    
+    <!-- 太空舱元素 -->
+    <div class="absolute -bottom-20 -right-20 w-64 h-64 border border-primary/20 rounded-full opacity-50 animate-spin-slow"></div>
+    <div class="absolute -top-10 -left-10 w-40 h-40 border border-accent/30 rounded-full opacity-40 animate-spin-slow" style="animation-duration: 20s;"></div>
+    
+    <!-- 404内容 -->
+    <div class="container mx-auto px-4 text-center relative z-10">
+      <div class="mb-8">
+        <h1 class="text-[clamp(8rem,20vw,16rem)] font-extrabold error-glow mb-4">404</h1>
+        <p class="text-[clamp(1.5rem,4vw,2.5rem)] font-semibold mb-6">页面未找到</p>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-8">
+          看起来您探索到了未知的宇宙区域，这个页面不存在或者已经被移除。
+        </p>
+        
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+          <a href="index.html" class="btn-hover-effect px-8 py-4 bg-gradient-to-r from-primary to-accent text-white font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all transform hover:-translate-y-1">
+            返回首页 <i class="fa fa-home ml-2"></i>
+          </a>
+          <a href="games.html" class="btn-hover-effect px-8 py-4 bg-dark/60 border border-gray-700 text-white font-bold rounded-lg hover:bg-dark/80 transition-all transform hover:-translate-y-1">
+            浏览游戏 <i class="fa fa-gamepad ml-2"></i>
+          </a>
+        </div>
+        
+        <!-- 搜索功能 -->
+        <div class="max-w-md mx-auto">
+          <form action="#" class="relative">
+            <input 
+              type="text" 
+              placeholder="搜索您想找的内容..." 
+              class="w-full px-5 py-4 pr-12 bg-dark/60 border border-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+            <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors">
+              <i class="fa fa-search text-xl"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- 太空探索提示 -->
+      <div class="mt-16 p-6 bg-dark/40 border border-gray-800 rounded-xl max-w-2xl mx-auto">
+        <div class="flex items-center justify-center mb-4">
+          <i class="fa fa-rocket text-primary text-3xl animate-pulse-slow"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">探索提示</h3>
+        <p class="text-gray-400">
+          您可能是通过无效链接访问的此页面，或者页面已被移动。
+          尝试返回我们的主页或浏览我们的游戏作品以继续您的探索之旅。
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-dark border-t border-gray-800 py-12">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-8 md:mb-0">
+          <div class="flex items-center space-x-2 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <span class="text-white font-bold text-sm">PX</span>
+            </div>
+            <span class="text-lg font-bold">Project-X</span>
+          </div>
+          <p class="text-gray-500 max-w-md">
+            创造非凡游戏体验，探索无限可能的虚拟世界。
+          </p>
+        </div>
+        
+        <div class="flex flex-wrap justify-center gap-8">
+          <div>
+            <h4 class="font-bold mb-4">快速链接</h4>
+            <ul class="space-y-2">
+              <li><a href="index.html" class="text-gray-500 hover:text-white transition-colors">首页</a></li>
+              <li><a href="about.html" class="text-gray-500 hover:text-white transition-colors">关于我们</a></li>
+              <li><a href="games.html" class="text-gray-500 hover:text-white transition-colors">游戏作品</a></li>
+              <li><a href="contact.html" class="text-gray-500 hover:text-white transition-colors">联系我们</a></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="font-bold mb-4">联系我们</h4>
+            <ul class="space-y-2">
+              <li class="flex items-start">
+                <i class="fa fa-envelope text-primary mt-1 mr-3"></i>
+                <span class="text-gray-500">contact@projectx.com</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fa fa-phone text-primary mt-1 mr-3"></i>
+                <span class="text-gray-500">+86 123 4567 8910</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="font-bold mb-4">关注我们</h4>
+            <div class="flex space-x-4">
+              <a href="#" class="w-10 h-10 rounded-full bg-dark/60 border border-gray-700 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary transition-all">
+                <i class="fa fa-weibo"></i>
+              </a>
+              <a href="#" class="w-10 h-10 rounded-full bg-dark/60 border border-gray-700 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary transition-all">
+                <i class="fa fa-wechat"></i>
+              </a>
+              <a href="#" class="w-10 h-10 rounded-full bg-dark/60 border border-gray-700 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary transition-all">
+                <i class="fa fa-twitter"></i>
+              </a>
+              <a href="#" class="w-10 h-10 rounded-full bg-dark/60 border border-gray-700 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary transition-all">
+                <i class="fa fa-youtube-play"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+        <p class="text-gray-600">© 2023 Project-X 游戏工作室. 保留所有权利.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // 移动端菜单切换
+    document.getElementById('mobile-menu-button').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenu.classList.toggle('hidden');
+      this.innerHTML = mobileMenu.classList.contains('hidden') ? 
+        '<i class="fa fa-bars text-xl"></i>' : '<i class="fa fa-times text-xl"></i>';
+    });
+    
+    // 滚动到顶部功能（如果需要）
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+    
+    // 导航链接悬停效果
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('mouseenter', function() {
+        this.style.setProperty('--tw-text-opacity', '1');
+        this.style.color = 'rgb(248 249 250)';
+      });
+      link.addEventListener('mouseleave', function() {
+        if (!this.classList.contains('active')) {
+          this.style.setProperty('--tw-text-opacity', '0.7');
+          this.style.color = 'rgb(209 213 219)';
+        }
+      });
+    });
+    
+    // 为返回首页按钮添加动画效果
+    const homeBtn = document.querySelector('a[href="index.html"]:has(.fa-home)');
+    homeBtn.addEventListener('mouseenter', function() {
+      this.querySelector('.fa-home').classList.add('fa-spin');
+    });
+    homeBtn.addEventListener('mouseleave', function() {
+      this.querySelector('.fa-home').classList.remove('fa-spin');
+    });
+  </script>
+</body>
+</html>
