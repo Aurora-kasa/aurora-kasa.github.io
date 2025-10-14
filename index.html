@@ -3,84 +3,2265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>简易在线聊天室</title>
-    <link rel="stylesheet" href="style.css">
+    <title>星域长剑：零重力逃生 (终极升级版)</title>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@400;700&display=swap');
+        :root {
+            --color-primary: #1e3a8a;
+            --color-secondary: #fcd34d;
+            --color-danger: #dc2626;
+            --color-text: #e0f2f1;
+            --color-background: #0f172a;
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            width: 95%;
+            max-width: 1000px;
+            border-radius: 1rem;
+            box-shadow: 0 0 40px rgba(30, 58, 138, 0.5);
+            background-color: #1e293b;
+            padding: 1rem;
+        }
+
+        canvas {
+            background-color: #0b111e;
+            border: 2px solid var(--color-primary);
+            border-radius: 0.75rem;
+            touch-action: none;
+        }
+
+        .ui-panel {
+            font-family: var(--font-display);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .resource-bar {
+            width: 100px;
+            height: 10px;
+            background-color: #475569;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-left: 0.25rem;
+            margin-right: 0.75rem;
+        }
+
+        .resource-fill {
+            height: 100%;
+            transition: width 0.1s ease-out;
+        }
+
+        .health-bar .resource-fill { background-color: var(--color-danger); }
+        .oxygen-bar .resource-fill { background-color: #0d9488; }
+        .energy-bar .resource-fill { background-color: var(--color-secondary); }
+
+        .game-status, .modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            color: var(--color-text);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: var(--font-display);
+            z-index: 100;
+            border-radius: 0.75rem;
+        }
+        
+        .modal-content {
+            background-color: #1e293b;
+            border: 3px solid var(--color-primary);
+            border-radius: 1rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 0 30px rgba(252, 211, 77, 0.2);
+            position: relative;
+        }
+
+        .game-status h1, .modal h2 {
+            font-size: 2.25rem;
+            color: var(--color-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .status-options, .skill-node {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .control-buttons button, .game-status button, .modal button, .ui-panel button {
+            font-family: var(--font-display);
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(145deg, var(--color-primary), #0c4a6e);
+            color: var(--color-text);
+            border: 2px solid var(--color-secondary);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.5);
+            text-transform: uppercase;
+        }
+        
+        .control-buttons button:hover, .game-status button:hover, .modal button:hover, .ui-panel button:hover {
+            background: linear-gradient(145deg, #0c4a6e, var(--color-primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(252, 211, 77, 0.3);
+        }
+
+        .skill-node {
+            background-color: #0f172a;
+            border: 1px solid var(--color-primary);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: left;
+        }
+        .skill-node h3 {
+            color: var(--color-secondary);
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+        .skill-node p {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+        .skill-node .level-info {
+            font-weight: bold;
+            color: var(--color-text);
+            margin-top: 0.5rem;
+        }
+        .upgrade-button:disabled {
+            background: #475569;
+            border-color: #64748b;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        
+        #event-display {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--color-danger);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.7);
+            opacity: 0;
+            transition: opacity 0.5s, transform 0.5s;
+            pointer-events: none;
+            font-family: var(--font-display);
+            z-index: 101;
+        }
+        
+        .event-active {
+            opacity: 1 !important;
+            transform: translate(-50%, 0) !important;
+        }
+
+        .ui-panel .action-button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            min-width: 80px;
+        }
+
+        /* Mobile Control Specific Styles */
+        #mobile-controls {
+            display: none;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        #mobile-dpad {
+            display: grid;
+            grid-template-areas: ". up ." 
+                               "left down right";
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 5px;
+        }
+
+        #mobile-dpad button:nth-child(1) { grid-area: up; }
+        #mobile-dpad button:nth-child(2) { grid-area: down; }
+        #mobile-dpad button:nth-child(3) { grid-area: left; }
+        #mobile-dpad button:nth-child(4) { grid-area: right; }
+
+        #mobile-action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .mobile-button {
+            font-family: var(--font-display);
+            padding: 0.75rem 0.5rem;
+            background: linear-gradient(145deg, #1e3a8a, #0c4a6e);
+            color: var(--color-text);
+            border: 2px solid var(--color-secondary);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.5);
+            font-size: 1rem;
+            min-width: 60px;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        .mobile-button:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                width: 100%;
+                padding: 0.5rem;
+                border-radius: 0;
+            }
+            .ui-panel {
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+            .resource-display {
+                margin-bottom: 0.5rem;
+            }
+            .desktop-controls {
+                display: none;
+            }
+            #mobile-controls {
+                display: flex;
+            }
+            .ui-panel > div:nth-child(1) { order: 1; width: 100%; text-align: center; }
+            .ui-panel > div:nth-child(2) { order: 3; flex-grow: 1; justify-content: space-around; display: flex; flex-wrap: wrap;}
+            .ui-panel > div:nth-child(3) { order: 2; display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 0.5rem; }
+            
+            .skill-tree-button, #reset-game-button {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* 新功能样式 */
+        .map-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .map-card {
+            background: #1e293b;
+            border: 2px solid var(--color-primary);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .map-card:hover {
+            border-color: var(--color-secondary);
+            transform: translateY(-2px);
+        }
+        
+        .map-card.selected {
+            border-color: var(--color-secondary);
+            background: #0f172a;
+        }
+
+        .skill-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .skill-card {
+            background: #1e293b;
+            border: 2px solid var(--color-primary);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .skill-card:hover {
+            border-color: var(--color-secondary);
+        }
+        
+        .skill-card.selected {
+            border-color: var(--color-secondary);
+            background: #0f172a;
+        }
+        
+        .skill-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .skin-selection {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .skin-option {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--color-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .skin-option:hover {
+            border-color: var(--color-secondary);
+        }
+        
+        .skin-option.selected {
+            border-color: var(--color-secondary);
+            box-shadow: 0 0 20px rgba(252, 211, 77, 0.5);
+        }
+
+        .cache-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #1e293b;
+            border: 2px solid var(--color-primary);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            max-width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .cache-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid #374151;
+            font-size: 0.875rem;
+        }
+        
+        .cache-entry:last-child {
+            border-bottom: none;
+        }
+
+        .currency-display {
+            color: var(--color-secondary);
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+
+        .blackhole-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #000 30%, #4a5568 70%, #000 100%);
+            animation: blackhole-pulse 1s infinite;
+        }
+        
+        @keyframes blackhole-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .treasure-chest {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #8b5cf6;
+            border: 2px solid #fcd34d;
+            border-radius: 5px;
+            animation: chest-glow 2s infinite;
+        }
+        
+        @keyframes chest-glow {
+            0%, 100% { box-shadow: 0 0 10px #fcd34d; }
+            50% { box-shadow: 0 0 20px #fcd34d; }
+        }
+    </style>
 </head>
 <body>
-    <!-- 登录/注册页面 -->
-    <div class="auth-container" id="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <h2>简易在线聊天室</h2>
-                <p>请登录或注册账号</p>
+
+<div class="game-container">
+    <div class="ui-panel">
+        <div class="flex flex-col sm:flex-row items-center text-sm">
+            <span class="text-xs text-gray-400 mr-2">ID: <span id="user-id-display" class="text-white text-xs">加载中...</span></span> 
+            时间: <span id="time-display" class="ml-1 text-lg text-white">00:00.00</span>
+            <span class="ml-4 text-xs text-gray-400" id="current-mode-display">模式: 选择中</span>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center space-x-2">
+            <div class="flex items-center text-xs resource-display">
+                生命
+                <div class="resource-bar health-bar">
+                    <div id="health-fill" class="resource-fill" style="width: 100%;"></div>
+                </div>
             </div>
-            
-            <!-- 登录表单 -->
-            <div class="auth-form" id="login-form">
-                <div class="form-group">
-                    <label for="login-email">邮箱</label>
-                    <input type="email" id="login-email" placeholder="请输入邮箱" required>
+            <div class="flex items-center text-xs resource-display">
+                氧气
+                <div class="resource-bar oxygen-bar">
+                    <div id="oxygen-fill" class="resource-fill" style="width: 100%;"></div>
                 </div>
-                <div class="form-group">
-                    <label for="login-password">密码</label>
-                    <input type="password" id="login-password" placeholder="请输入密码" required>
-                </div>
-                <button class="auth-btn" id="login-btn">登录</button>
-                <p class="auth-toggle">
-                    还没有账号？<span id="show-register">立即注册</span>
-                </p>
             </div>
-            
-            <!-- 注册表单 -->
-            <div class="auth-form" id="register-form" style="display: none;">
-                <div class="form-group">
-                    <label for="register-name">昵称</label>
-                    <input type="text" id="register-name" placeholder="请输入昵称" required maxlength="20">
+            <div class="flex items-center text-xs resource-display">
+                能源
+                <div class="resource-bar energy-bar">
+                    <div id="energy-fill" class="resource-fill" style="width: 100%;"></div>
                 </div>
-                <div class="form-group">
-                    <label for="register-email">邮箱</label>
-                    <input type="email" id="register-email" placeholder="请输入邮箱" required>
-                </div>
-                <div class="form-group">
-                    <label for="register-password">密码</label>
-                    <input type="password" id="register-password" placeholder="请设置密码（至少6位）" required minlength="6">
-                </div>
-                <button class="auth-btn" id="register-btn">注册</button>
-                <p class="auth-toggle">
-                    已有账号？<span id="show-login">返回登录</span>
-                </p>
             </div>
         </div>
-    </div>
-    
-    <!-- 聊天容器 -->
-    <div class="chat-container" id="chat-container" style="display: none;">
-        <div class="chat-header">
-            <h2>简易在线聊天室</h2>
-            <div class="header-actions">
-                <p class="subtitle">聊天记录将在30天后自动删除</p>
-                <button id="logout-btn" class="logout-btn">退出登录</button>
-            </div>
-        </div>
-        
-        <div class="chat-messages" id="chat-messages">
-            <div class="welcome-message">
-                <p>欢迎来到聊天室！开始您的聊天吧。</p>
-            </div>
-        </div>
-        
-        <div class="chat-input" id="chat-input-section">
-            <input type="text" id="message-input" placeholder="输入消息..." maxlength="500">
-            <button id="send-message">发送</button>
-            <button id="clear-messages">清空聊天</button>
-        </div>
-        
-        <div class="chat-info">
-            <p>当前用户: <span id="current-user">未登录</span></p>
-            <p>消息数量: <span id="message-count">0</span></p>
+        <div class="flex items-center text-sm space-x-2">
+            <button id="reset-game-button" class="action-button px-3 py-1 text-xs" style="border-color: #6366f1; background: #4f46e5;">返回菜单</button>
+            <span>SP: <span id="skill-point-display" class="ml-1 text-lg text-green-400">0</span></span>
+            <span class="currency-display">哈夫币: <span id="haf-coins-display" class="ml-1 text-lg text-yellow-400">0</span></span>
+            <button id="skill-tree-button" class="action-button px-3 py-1 text-xs" style="border-color: #10b981; background: #064e3b;">技能树</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <div id="event-display" class=""></div>
+
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <div id="game-status-overlay" class="game-status absolute inset-0 hidden">
+        <div class="p-8 bg-gray-800/90 rounded-xl shadow-2xl border-4 border-yellow-500">
+            <h1 id="status-title">星域长剑：零重力逃生</h1>
+            <p id="status-message">WASD/方向键 推进器 | 鼠标点击/触摸 虚空之刃牵引 | R 虹吸能源 | P/Space 斩击</p>
+            
+            <div id="map-selection-section" class="hidden">
+                <h3 class="text-xl text-yellow-400 mt-6 mb-4">选择地图</h3>
+                <div class="map-selection" id="map-options-container">
+                    <div class="map-card selected" data-map="classic">
+                        <h4 class="text-lg font-bold text-yellow-400">经典地图</h4>
+                        <p class="text-sm text-gray-300">原始的经典体验</p>
+                    </div>
+                    <div class="map-card" data-map="maze">
+                        <h4 class="text-lg font-bold text-yellow-400">迷宫地图</h4>
+                        <p class="text-sm text-gray-300">复杂的迷宫结构</p>
+                    </div>
+                    <div class="map-card" data-map="arena">
+                        <h4 class="text-lg font-bold text-yellow-400">竞技场</h4>
+                        <p class="text-sm text-gray-300">开阔的战斗空间</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="skin-selection-section" class="hidden">
+                <h3 class="text-xl text-yellow-400 mt-6 mb-4">选择皮肤</h3>
+                <div class="skin-selection">
+                    <div class="skin-option selected" data-skin="default" style="background: #1e3a8a;">🚀</div>
+                    <div class="skin-option" data-skin="red" style="background: #dc2626;">🔴</div>
+                    <div class="skin-option" data-skin="green" style="background: #10b981;">🟢</div>
+                    <div class="skin-option" data-skin="purple" style="background: #8b5cf6;">🟣</div>
+                </div>
+            </div>
+
+            <div id="skill-selection-section" class="hidden">
+                <h3 class="text-xl text-yellow-400 mt-6 mb-4">选择技能 (最多2个)</h3>
+                <div class="skill-selection" id="skill-options-container">
+                    <div class="skill-card selected" data-skill="siphon" data-cost="0">
+                        <h4 class="text-sm font-bold">虹吸技能</h4>
+                        <p class="text-xs text-gray-400">免费</p>
+                        <p class="text-xs">黑洞降维敌人</p>
+                    </div>
+                    <div class="skill-card" data-skill="dash" data-cost="50">
+                        <h4 class="text-sm font-bold">瞬移冲刺</h4>
+                        <p class="text-xs text-gray-400">50哈夫币</p>
+                        <p class="text-xs">快速位移</p>
+                    </div>
+                    <div class="skill-card" data-skill="shield" data-cost="75">
+                        <h4 class="text-sm font-bold">能量护盾</h4>
+                        <p class="text-xs text-gray-400">75哈夫币</p>
+                        <p class="text-xs">临时无敌</p>
+                    </div>
+                    <div class="skill-card" data-skill="heal" data-cost="100">
+                        <h4 class="text-sm font-bold">紧急治疗</h4>
+                        <p class="text-xs text-gray-400">100哈夫币</p>
+                        <p class="text-xs">恢复生命值</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 id="mode-selection-title" class="text-xl text-yellow-400 mt-6 mb-4">选择模式</h3>
+            <div class="status-options" id="mode-options-container">
+                <button id="mode-normal" data-mode="Normal">普通模式 (Normal) - 基础体验</button>
+                <button id="mode-hardcore" data-mode="Hardcore">硬核模式 (Hardcore) - 资源消耗增加</button>
+            </div>
+            
+            <p class="text-xs text-gray-400 mt-4">当前用户ID (分享此ID): <span id="user-id-overlay">加载中...</span></p>
+            <p id="high-score-display" class="text-sm mt-2 text-green-300">本地最佳时间: N/A | 全局最佳时间: N/A</p>
+            <div id="local-cache-display" class="text-xs text-gray-400 mt-2"></div>
+            
+            <button id="next-step-button" class="mt-4 hidden">开始游戏</button>
+        </div>
+    </div>
+    
+    <div id="skill-tree-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 class="text-center">虚空技能树</h2>
+            <p class="text-center text-sm mb-4">可用技能点: <span id="modal-skill-point-display" class="text-green-400 text-lg font-bold">0</span> SP</p>
+            <p class="text-center text-xs text-gray-400 mb-4">游戏开始前您有一次免费分配初始技能点的机会。</p>
+
+            <div id="skill-nodes-container" class="space-y-4 max-h-80 overflow-y-auto pr-2">
+                </div>
+            
+            <button id="close-skill-tree" class="mt-6">开始游戏</button>
+        </div>
+    </div>
+
+    <div class="control-buttons desktop-controls">
+        <span class="text-sm text-gray-400">WASD/方向键: 推进 | 鼠标左键: 牵引 | R: 虹吸 | P/Space: 斩击 | Q: 使用技能</span>
+    </div>
+
+    <div id="mobile-controls" class="hidden">
+        <div id="mobile-dpad">
+            <button id="thrust-up" class="mobile-button">↑</button>
+            <button id="thrust-down" class="mobile-button">↓</button>
+            <button id="thrust-left" class="mobile-button">←</button>
+            <button id="thrust-right" class="mobile-button">→</button>
+        </div>
+        <div id="mobile-action-buttons">
+            <button id="action-grapple" class="mobile-button">牵引</button>
+            <button id="action-siphon" class="mobile-button">虹吸</button>
+            <button id="action-slash" class="mobile-button">斩击</button>
+            <button id="action-skill" class="mobile-button">技能</button>
+        </div>
+    </div>
+</div>
+
+<div class="cache-display" id="cache-display">
+    <h3 class="text-yellow-400 text-sm font-bold mb-2">本地记录</h3>
+    <div id="cache-entries"></div>
+</div>
+
+<script type="module">
+    // Firebase Setup
+    const { initializeApp } = firebase;
+    const { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } = firebase.auth;
+    const { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, query, orderBy, limit, runTransaction } = firebase.firestore;
+    const { setLogLevel } = firebase;
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    
+    let db, auth;
+    let userId = 'loading';
+    let isAuthReady = false;
+    let globalBestTime = 'N/A';
+    let userBestTime = 'N/A';
+    let initialAuthComplete = false;
+    let userSkillDocRef = null;
+
+    setLogLevel('error');
+
+    // 本地存储管理
+    class LocalStorageManager {
+        constructor() {
+            this.storageKey = 'zero_g_escape_data';
+            this.data = this.loadData();
+        }
+
+        loadData() {
+            try {
+                const data = localStorage.getItem(this.storageKey);
+                return data ? JSON.parse(data) : {
+                    escapeTimes: [],
+                    hafCoins: 0,
+                    unlockedSkills: ['siphon'],
+                    selectedSkills: ['siphon'],
+                    selectedMap: 'classic',
+                    selectedSkin: 'default'
+                };
+            } catch (e) {
+                console.error('Error loading local data:', e);
+                return { escapeTimes: [], hafCoins: 0, unlockedSkills: ['siphon'], selectedSkills: ['siphon'] };
+            }
+        }
+
+        saveData() {
+            try {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+                this.updateDisplay();
+            } catch (e) {
+                console.error('Error saving local data:', e);
+            }
+        }
+
+        addEscapeTime(time) {
+            this.data.escapeTimes.push({
+                time: time,
+                timestamp: Date.now(),
+                playerId: userId
+            });
+            if (this.data.escapeTimes.length > 10) {
+                this.data.escapeTimes = this.data.escapeTimes.slice(-10);
+            }
+            this.saveData();
+        }
+
+        addHafCoins(amount) {
+            this.data.hafCoins += amount;
+            this.saveData();
+        }
+
+        spendHafCoins(amount) {
+            if (this.data.hafCoins >= amount) {
+                this.data.hafCoins -= amount;
+                this.saveData();
+                return true;
+            }
+            return false;
+        }
+
+        unlockSkill(skillId) {
+            if (!this.data.unlockedSkills.includes(skillId)) {
+                this.data.unlockedSkills.push(skillId);
+                this.saveData();
+            }
+        }
+
+        selectSkill(skillId) {
+            if (!this.data.selectedSkills.includes(skillId) && this.data.selectedSkills.length < 2) {
+                this.data.selectedSkills.push(skillId);
+                this.saveData();
+            }
+        }
+
+        deselectSkill(skillId) {
+            this.data.selectedSkills = this.data.selectedSkills.filter(id => id !== skillId);
+            this.saveData();
+        }
+
+        updateDisplay() {
+            const cacheDisplay = document.getElementById('cache-entries');
+            if (cacheDisplay) {
+                cacheDisplay.innerHTML = '';
+                
+                // 显示逃脱时间记录
+                this.data.escapeTimes.forEach((entry, index) => {
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'cache-entry';
+                    entryDiv.innerHTML = `
+                        <span>${entry.playerId.substring(0, 8)}</span>
+                        <span>${formatTime(entry.time)}</span>
+                    `;
+                    cacheDisplay.appendChild(entryDiv);
+                });
+
+                // 显示哈夫币总数
+                const coinEntry = document.createElement('div');
+                coinEntry.className = 'cache-entry';
+                coinEntry.innerHTML = `
+                    <span>哈夫币总数</span>
+                    <span class="text-yellow-400">${this.data.hafCoins}</span>
+                `;
+                cacheDisplay.appendChild(coinEntry);
+            }
+        }
+    }
+
+    const localStorageManager = new LocalStorageManager();
+
+    if (firebaseConfig) {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (initialAuthComplete) return;
+
+            if (!user && initialAuthToken) {
+                try {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                    user = auth.currentUser;
+                } catch (error) {
+                    console.error("Custom token sign in failed:", error);
+                }
+            }
+
+            if (!user) {
+                try {
+                    await signInAnonymously(auth);
+                    user = auth.currentUser;
+                } catch (error) {
+                    console.error("Anonymous sign in failed:", error);
+                }
+            }
+            
+            if (user) {
+                userId = user.uid;
+                userSkillDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'zero_g_escape_skills', userId);
+                await loadUserSkills();
+            } else {
+                userId = '未登录 (无权限)';
+            }
+            
+            document.getElementById('user-id-display').textContent = userId;
+            document.getElementById('user-id-overlay').textContent = userId;
+
+            isAuthReady = true;
+            initialAuthComplete = true;
+            listenForScores();
+            showGameStatusOverlay('menu');
+        });
+    } else {
+        userId = '无Firebase配置';
+        document.getElementById('user-id-display').textContent = userId;
+        document.getElementById('user-id-overlay').textContent = userId;
+        isAuthReady = true;
+        initialAuthComplete = true;
+        console.warn("Firebase config not found. Running without persistent storage.");
+        showGameStatusOverlay('menu');
+    }
+
+    async function loadUserSkills() {
+        if (!userSkillDocRef) return;
+        try {
+            const docSnap = await getDoc(userSkillDocRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                for (const skillId in data.skills) {
+                    if (SKILL_TREE[skillId]) {
+                        activeSkills[skillId] = data.skills[skillId];
+                    }
+                }
+                player.skillPoints = data.skillPoints || 5;
+                console.log("Skills loaded:", activeSkills, "SP:", player.skillPoints);
+            } else {
+                await setDoc(userSkillDocRef, { 
+                    userId: userId,
+                    skills: activeSkills,
+                    skillPoints: 5 
+                }, { merge: true });
+            }
+            calculateSkillEffects();
+            updateSkillPointDisplay();
+        } catch (e) {
+            console.error("Error loading or initializing user skills:", e);
+        }
+    }
+
+    async function saveUserSkills() {
+        if (!userSkillDocRef) return;
+        try {
+            await setDoc(userSkillDocRef, {
+                skills: activeSkills,
+                skillPoints: player.skillPoints
+            }, { merge: true });
+        } catch (e) {
+            console.error("Error saving user skills:", e);
+        }
+    }
+
+    async function saveBestTime(time) {
+        if (!isAuthReady || !db || !auth.currentUser) return;
+        
+        const currentUid = auth.currentUser.uid;
+        const scoreCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'zero_g_escape_scores');
+        const userDocRef = doc(scoreCollectionRef, currentUid);
+        const newTimeInSeconds = (time / 1000).toFixed(2);
+        
+        try {
+            await runTransaction(db, async (transaction) => {
+                const docSnap = await transaction.get(userDocRef);
+                let shouldUpdate = false;
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (parseFloat(newTimeInSeconds) < parseFloat(data.bestTimeSeconds) || parseFloat(data.bestTimeSeconds) === 0) {
+                        shouldUpdate = true;
+                    }
+                } else {
+                    shouldUpdate = true;
+                }
+
+                if (shouldUpdate) {
+                    transaction.set(userDocRef, {
+                        userId: currentUid, 
+                        bestTimeSeconds: newTimeInSeconds,
+                        timestamp: Date.now(),
+                    }, { merge: true });
+                }
+            });
+        } catch (e) {
+            console.error("Error saving score:", e);
+        }
+    }
+
+    function listenForScores() {
+        if (!isAuthReady || !db) return;
+
+        const scoreCollectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'zero_g_escape_scores');
+        
+        if (auth.currentUser) {
+            const userDocRef = doc(scoreCollectionRef, auth.currentUser.uid);
+            onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    userBestTime = parseFloat(docSnap.data().bestTimeSeconds).toFixed(2) + 's';
+                } else {
+                    userBestTime = 'N/A';
+                }
+                updateHighScoreDisplay();
+            });
+        }
+
+        const q = query(scoreCollectionRef, orderBy('bestTimeSeconds'), limit(5));
+        onSnapshot(q, (snapshot) => {
+            let scores = [];
+            let currentGlobalBest = 'N/A';
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                scores.push({ time: parseFloat(data.bestTimeSeconds), userId: data.userId });
+            });
+
+            if (scores.length > 0) {
+                const bestScore = scores[0];
+                currentGlobalBest = bestScore.time.toFixed(2) + 's' + (bestScore.userId === auth.currentUser?.uid ? ' (您)' : '');
+            } else {
+                currentGlobalBest = 'N/A';
+            }
+            globalBestTime = currentGlobalBest;
+            updateHighScoreDisplay();
+        });
+    }
+
+    function formatTime(ms) {
+        const totalSeconds = Math.floor(ms / 1000);
+        const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+        const seconds = String(totalSeconds % 60).padStart(2, '0');
+        const milliseconds = String(Math.floor((ms % 1000) / 10)).padStart(2, '0');
+        return `${minutes}:${seconds}.${milliseconds}`;
+    }
+
+    function updateHighScoreDisplay() {
+        const display = document.getElementById('high-score-display');
+        if (display) {
+            display.innerHTML = `本地最佳时间 (User): <span class="text-white">${userBestTime}</span> | 全局最佳时间: <span class="text-white">${globalBestTime}</span>`;
+        }
+    }
+
+    function updateResourceBars() {
+        document.getElementById('health-fill').style.width = `${Math.max(0, player.health)}%`;
+        document.getElementById('oxygen-fill').style.width = `${Math.max(0, player.oxygen)}%`;
+        document.getElementById('energy-fill').style.width = `${Math.max(0, player.energy)}%`;
+        
+        if (player.health <= 20) {
+             document.getElementById('health-fill').style.backgroundColor = '#f87171';
+        } else {
+             document.getElementById('health-fill').style.backgroundColor = COLOR_DANGER;
+        }
+    }
+    
+    function updateSkillPointDisplay() {
+        const sp = Math.floor(player.skillPoints);
+        document.getElementById('skill-point-display').textContent = sp;
+        document.getElementById('modal-skill-point-display').textContent = sp;
+        
+        const skillTreeButton = document.getElementById('skill-tree-button');
+        if (!gameState.running) {
+             skillTreeButton.disabled = false;
+        } else {
+             skillTreeButton.disabled = sp < 1; 
+        }
+    }
+
+    function updateHafCoinsDisplay() {
+        document.getElementById('haf-coins-display').textContent = localStorageManager.data.hafCoins;
+    }
+
+    function showGameStatusOverlay(state) {
+        const overlay = document.getElementById('game-status-overlay');
+        const title = document.getElementById('status-title');
+        const message = document.getElementById('status-message');
+        const modeOptions = document.getElementById('mode-options-container');
+        const modeTitle = document.getElementById('mode-selection-title');
+        const nextButton = document.getElementById('next-step-button');
+        const mapSection = document.getElementById('map-selection-section');
+        const skinSection = document.getElementById('skin-selection-section');
+        const skillSection = document.getElementById('skill-selection-section');
+        
+        overlay.classList.remove('hidden');
+        nextButton.classList.add('hidden');
+        modeOptions.classList.add('hidden');
+        modeTitle.classList.add('hidden');
+        mapSection.classList.add('hidden');
+        skinSection.classList.add('hidden');
+        skillSection.classList.add('hidden');
+        
+        if (state === 'menu') {
+            title.textContent = "星域长剑：零重力逃生";
+            message.textContent = "WASD/方向键 推进器 | 鼠标点击/触摸 虚空之刃牵引 | R 虹吸能源 | P/Space 斩击 | Q: 使用技能";
+            
+            mapSection.classList.remove('hidden');
+            skinSection.classList.remove('hidden');
+            skillSection.classList.remove('hidden');
+            modeOptions.classList.remove('hidden');
+            modeTitle.classList.remove('hidden');
+            
+            document.getElementById('mode-normal').onclick = () => { setupGameMode('Normal'); nextButton.classList.remove('hidden'); };
+            document.getElementById('mode-hardcore').onclick = () => { setupGameMode('Hardcore'); nextButton.classList.remove('hidden'); };
+            nextButton.textContent = "开始游戏";
+            nextButton.onclick = startGame;
+            
+            updateHafCoinsDisplay();
+            updateSkillSelectionUI();
+        } else if (state === 'win') {
+            title.textContent = "胜利！逃生成功！";
+            message.textContent = `您用时 ${formatTime(gameState.elapsedTime)} 成功逃离！获得 ${Math.floor(gameState.elapsedTime / 60000)} 哈夫币！`;
+            nextButton.textContent = "返回主菜单";
+            nextButton.classList.remove('hidden');
+            nextButton.onclick = () => showGameStatusOverlay('menu');
+        } else if (state === 'lose') {
+            title.textContent = "任务失败";
+            message.textContent = `你在 ${formatTime(gameState.elapsedTime)} 时因资源耗尽而失败。`;
+            nextButton.textContent = "返回主菜单";
+            nextButton.classList.remove('hidden');
+            nextButton.onclick = () => showGameStatusOverlay('menu');
+        }
+        
+        updateLocalCacheDisplay();
+    }
+
+    function updateLocalCacheDisplay() {
+        const display = document.getElementById('local-cache-display');
+        if (display) {
+            const recentTimes = localStorageManager.data.escapeTimes.slice(-3);
+            if (recentTimes.length > 0) {
+                display.innerHTML = '最近记录: ' + recentTimes.map(entry => 
+                    `${entry.playerId.substring(0, 8)}: ${formatTime(entry.time)}`
+                ).join(' | ');
+            }
+        }
+    }
+
+    function updateSkillSelectionUI() {
+        const skillCards = document.querySelectorAll('.skill-card');
+        skillCards.forEach(card => {
+            const skillId = card.dataset.skill;
+            const cost = parseInt(card.dataset.cost);
+            const isUnlocked = localStorageManager.data.unlockedSkills.includes(skillId);
+            const isSelected = localStorageManager.data.selectedSkills.includes(skillId);
+            
+            card.classList.toggle('selected', isSelected);
+            card.classList.toggle('disabled', !isUnlocked && localStorageManager.data.hafCoins < cost);
+            
+            card.onclick = () => {
+                if (!isUnlocked && localStorageManager.data.hafCoins >= cost) {
+                    if (confirm(`花费 ${cost} 哈夫币解锁 ${skillId} 技能？`)) {
+                        if (localStorageManager.spendHafCoins(cost)) {
+                            localStorageManager.unlockSkill(skillId);
+                            updateSkillSelectionUI();
+                            updateHafCoinsDisplay();
+                        }
+                    }
+                } else if (isUnlocked) {
+                    if (isSelected) {
+                        localStorageManager.deselectSkill(skillId);
+                    } else if (localStorageManager.data.selectedSkills.length < 2) {
+                        localStorageManager.selectSkill(skillId);
+                    } else {
+                        alert('最多只能选择2个技能！');
+                    }
+                    updateSkillSelectionUI();
+                }
+            };
+        });
+    }
+
+    // 地图系统
+    const MAPS = {
+        classic: {
+            walls: [
+                { x: 0, y: 0, w: GAME_WIDTH, h: 10, type: 'wall' },
+                { x: 0, y: GAME_HEIGHT - 10, w: GAME_WIDTH, h: 10, type: 'wall' },
+                { x: 0, y: 0, w: 10, h: GAME_HEIGHT, type: 'wall' },
+                { x: GAME_WIDTH - 20, y: 0, w: 20, h: 50, type: 'goal' },
+                { x: 200, y: 100, w: 20, h: 300, type: 'wall' },
+                { x: 400, y: 200, w: 200, h: 20, type: 'wall' },
+            ],
+            hazards: [
+                { x: 300, y: 0, w: 50, h: 150, type: 'radiation', damage: 0.1 },
+                { x: 500, y: 400, w: 100, h: 100, type: 'heat', damage: 0.05 },
+            ]
+        },
+        maze: {
+            walls: [
+                { x: 0, y: 0, w: GAME_WIDTH, h: 10, type: 'wall' },
+                { x: 0, y: GAME_HEIGHT - 10, w: GAME_WIDTH, h: 10, type: 'wall' },
+                { x: 0, y: 0, w: 10, h: GAME_HEIGHT, type: 'wall' },
+                { x: GAME_WIDTH - 20, y: GAME_HEIGHT - 50, w: 20, h: 50, type: 'goal' },
+                { x: 150, y: 100, w: 20, h: 200, type: 'wall' },
+                { x: 300, y: 50, w: 20, h: 150, type: 'wall' },
+                { x: 450, y: 200, w: 20, h: 200, type: 'wall' },
+                { x: 200, y: 300, w: 200, h: 20, type: 'wall' },
+                { x: 600, y: 100, w: 20, h: 300, type: 'wall' },
+            ],
+            hazards: [
+                { x: 250, y: 150, w: 30, h: 100, type: 'radiation', damage: 0.15 },
+                { x: 500, y: 250, w: 80, h: 80, type: 'heat', damage: 0.08 },
+                { x: 100, y: 400, w: 60, h: 60, type: 'radiation', damage: 0.12 },
+            ]
+        },
+        arena: {
+            walls: [
+                { x: 0, y: 0, w: GAME_WIDTH, h: 10, type: 'wall' },
+                { x: 0, y: GAME_HEIGHT - 10, w: GAME_WIDTH, h: 10, type: 'wall' },
+                { x: 0, y: 0, w: 10, h: GAME_HEIGHT, type: 'wall' },
+                { x: GAME_WIDTH - 20, y: GAME_HEIGHT / 2 - 25, w: 20, h: 50, type: 'goal' },
+                { x: 200, y: 150, w: 100, h: 20, type: 'wall' },
+                { x: 200, y: 350, w: 100, h: 20, type: 'wall' },
+                { x: 500, y: 150, w: 100, h: 20, type: 'wall' },
+                { x: 500, y: 350, w: 100, h: 20, type: 'wall' },
+            ],
+            hazards: [
+                { x: 350, y: 250, w: 100, h: 100, type: 'radiation', damage: 0.2 },
+            ]
+        }
+    };
+
+    // 皮肤系统
+    const SKINS = {
+        default: { color: '#1e3a8a', emoji: '🚀' },
+        red: { color: '#dc2626', emoji: '🔴' },
+        green: { color: '#10b981', emoji: '🟢' },
+        purple: { color: '#8b5cf6', emoji: '🟣' }
+    };
+
+    let currentMap = 'classic';
+    let currentSkin = 'default';
+
+    // 技能系统
+    const ACTIVE_SKILLS = {
+        siphon: {
+            name: '虹吸技能',
+            cooldown: 0,
+            maxCooldown: 300,
+            active: false,
+            effect: 'blackhole'
+        },
+        dash: {
+            name: '瞬移冲刺',
+            cooldown: 0,
+            maxCooldown: 600,
+            active: false,
+            effect: 'dash'
+        },
+        shield: {
+            name: '能量护盾',
+            cooldown: 0,
+            maxCooldown: 900,
+            active: false,
+            effect: 'shield'
+        },
+        heal: {
+            name: '紧急治疗',
+            cooldown: 0,
+            maxCooldown: 1200,
+            active: false,
+            effect: 'heal'
+        }
+    };
+
+    let activePlayerSkills = {};
+
+    // 宝箱系统
+    let treasureChests = [];
+    const TREASURE_SPAWN_INTERVAL = 300; // 5秒
+    let treasureSpawnTimer = 0;
+
+    function spawnTreasureChest() {
+        if (treasureChests.length < 3) {
+            treasureChests.push({
+                x: Math.random() * (GAME_WIDTH - 100) + 50,
+                y: Math.random() * (GAME_HEIGHT - 100) + 50,
+                collected: false,
+                coins: Math.floor(Math.random() * 20) + 10
+            });
+        }
+    }
+
+    function checkTreasureCollection() {
+        treasureChests = treasureChests.filter(chest => {
+            if (!chest.collected) {
+                const dist = Math.hypot(player.x - chest.x, player.y - chest.y);
+                if (dist < player.radius + 20) {
+                    chest.collected = true;
+                    localStorageManager.addHafCoins(chest.coins);
+                    updateHafCoinsDisplay();
+                    showEvent(`发现宝箱！获得 ${chest.coins} 哈夫币！`, COLOR_SECONDARY);
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+
+    // 黑洞技能效果
+    function activateBlackholeSkill() {
+        const skill = activePlayerSkills.siphon;
+        if (!skill || skill.cooldown > 0) return;
+
+        // 找到最近的敌人
+        let nearestEnemy = null;
+        let minDist = Infinity;
+        
+        enemies.forEach(enemy => {
+            const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y);
+            if (dist < minDist && dist < 150) {
+                minDist = dist;
+                nearestEnemy = enemy;
+            }
+        });
+
+        if (nearestEnemy) {
+            skill.cooldown = skill.maxCooldown;
+            
+            // 创建黑洞效果
+            const blackhole = document.createElement('div');
+            blackhole.className = 'blackhole-effect';
+            blackhole.style.left = nearestEnemy.x + 'px';
+            blackhole.style.top = nearestEnemy.y + 'px';
+            blackhole.style.width = '100px';
+            blackhole.style.height = '100px';
+            blackhole.style.marginLeft = '-50px';
+            blackhole.style.marginTop = '-50px';
+            
+            document.body.appendChild(blackhole);
+
+            // 降维效果
+            let scale = 1;
+            const shrinkInterval = setInterval(() => {
+                scale -= 0.1;
+                nearestEnemy.radius *= 0.9;
+                blackhole.style.transform = `scale(${1/scale})`;
+                
+                if (scale <= 0.1) {
+                    clearInterval(shrinkInterval);
+                    enemies = enemies.filter(e => e !== nearestEnemy);
+                    document.body.removeChild(blackhole);
+                    player.skillPoints += 2;
+                    updateSkillPointDisplay();
+                    showEvent('敌人被黑洞降维消灭！+2 SP', COLOR_SECONDARY);
+                }
+            }, 100);
+        }
+    }
+
+    // 其他技能效果
+    function activateDashSkill() {
+        const skill = activePlayerSkills.dash;
+        if (!skill || skill.cooldown > 0) return;
+
+        skill.cooldown = skill.maxCooldown;
+        const angle = Math.atan2(player.velY, player.velX) || 0;
+        player.velX += Math.cos(angle) * 5;
+        player.velY += Math.sin(angle) * 5;
+        showEvent('瞬移冲刺激活！', COLOR_TEAL);
+    }
+
+    function activateShieldSkill() {
+        const skill = activePlayerSkills.shield;
+        if (!skill || skill.cooldown > 0) return;
+
+        skill.cooldown = skill.maxCooldown;
+        skill.active = true;
+        setTimeout(() => { skill.active = false; }, 3000);
+        showEvent('能量护盾激活！3秒无敌', COLOR_SECONDARY);
+    }
+
+    function activateHealSkill() {
+        const skill = activePlayerSkills.heal;
+        if (!skill || skill.cooldown > 0) return;
+
+        skill.cooldown = skill.maxCooldown;
+        player.health = Math.min(100, player.health + 30);
+        updateResourceBars();
+        showEvent('紧急治疗！恢复30生命值', COLOR_TEAL);
+    }
+
+    // 技能冷却更新
+    function updateSkillCooldowns() {
+        Object.values(activePlayerSkills).forEach(skill => {
+            if (skill.cooldown > 0) {
+                skill.cooldown--;
+            }
+        });
+    }
+
+    // 使用技能
+    function useActiveSkill() {
+        Object.keys(activePlayerSkills).forEach(skillId => {
+            const skill = activePlayerSkills[skillId];
+            if (skill && skill.cooldown === 0) {
+                switch (skillId) {
+                    case 'siphon':
+                        activateBlackholeSkill();
+                        break;
+                    case 'dash':
+                        activateDashSkill();
+                        break;
+                    case 'shield':
+                        activateShieldSkill();
+                        break;
+                    case 'heal':
+                        activateHealSkill();
+                        break;
+                }
+            }
+        });
+    }
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const GAME_WIDTH = 800;
+    const GAME_HEIGHT = 600;
+    canvas.width = GAME_WIDTH;
+    canvas.height = GAME_HEIGHT;
+
+    const COLOR_PRIMARY = '#1e3a8a';
+    const COLOR_SECONDARY = '#fcd34d';
+    const COLOR_DANGER = '#dc2626';
+    const COLOR_TEXT = '#e0f2f1';
+    const COLOR_TEAL = '#0d9488';
+    const COLOR_DARK_GREY = '#374151';
+    const COLOR_BG = '#152135';
+
+    const ZERO_G_DRAG = 0.998;
+    const MAX_VELOCITY = 10;
+    
+    const THRUST_FORCE_BASE = 0.05;
+    const OXYGEN_DRAIN_RATE_NORMAL = 0.005; 
+    const OXYGEN_DRAIN_RATE_HARDCORE = 0.01; 
+    const ENERGY_DRAIN_THRUST_BASE = 0.04; 
+    const ENERGY_DRAIN_TETHER_BASE = 0.07;
+    const ENERGY_DRAIN_SLASH_BASE = 3;
+    const SIPHON_COOLDOWN_FRAMES = 600;
+    const TIME_PER_SKILL_POINT_MS = 60000;
+    const EVENT_INTERVAL_MS = 30000;
+    const ENERGY_SIPHON_GAIN = 30;
+
+    let player = {
+        x: 50,
+        y: GAME_HEIGHT / 2,
+        radius: 10,
+        velX: 0,
+        velY: 0,
+        health: 100,
+        oxygen: 100,
+        energy: 100, 
+        skillPoints: 0,
+    };
+
+    let gameState = {
+        running: false,
+        startTime: 0,
+        elapsedTime: 0,
+        lastSkillPointTime: 0,
+        lastEventTime: 0,
+        siphonCooldown: 0,
+        isGrappling: false,
+        grappleTarget: { x: 0, y: 0 },
+        isSlashing: false,
+        slashFrameCount: 0,
+        mode: null, 
+        skillTreeVisible: false,
+    };
+
+    let walls = [];
+    let hazards = [];
+    let resources = [];
+    let enemies = [];
+    
+    function resetEnvironment() {
+        const mapData = MAPS[currentMap];
+        walls = [...mapData.walls];
+        hazards = [...mapData.hazards];
+        
+        resources = [
+            { x: 100, y: 100, radius: 15, type: 'oxygen', amount: 50, collected: false },
+            { x: 600, y: 500, radius: 15, type: 'energy', amount: 50, collected: false },
+            { x: 300, y: 300, radius: 10, type: 'siphon_point', isSiphoning: false, range: 50 },
+        ];
+        
+        enemies = [
+            createEnemy(400, 100),
+            createEnemy(500, 300),
+            createEnemy(700, 400),
+        ];
+        
+        treasureChests = [];
+        treasureSpawnTimer = 0;
+    }
+
+    function createEnemy(x, y) {
+        return {
+            x: x, y: y, radius: 8, velX: (Math.random() - 0.5) * 0.5, velY: (Math.random() - 0.5) * 0.5,
+            health: 20, maxHealth: 20, type: 'Maint-Drone', color: '#8b5cf6', rotation: Math.random() * 2 * Math.PI,
+        };
+    }
+
+    const SKILL_TREE = {
+        'KineticEfficiency': { 
+            id: 'KineticEfficiency', name: "动能效率", 
+            desc: (level) => `推进器/牵引能源消耗减少 ${level * 10}%。`, 
+            maxLevel: 3, 
+            cost: [1, 2, 3],
+            getEffect: (level) => ({ thrustDrainMult: 1 - level * 0.10, tetherDrainMult: 1 - level * 0.10 })
+        },
+        'VoidBladeMastery': { 
+            id: 'VoidBladeMastery', name: "虚空之刃精通", 
+            desc: (level) => `斩击范围增加 ${level * 10}，斩击伤害增加 ${level * 5}。`, 
+            maxLevel: 3, 
+            cost: [2, 3, 4],
+            getEffect: (level) => ({ slashRangeBonus: level * 10, slashDamageBonus: level * 5, slashDrainReduction: level * 0.5 })
+        },
+        'ResourceRegeneration': {
+            id: 'ResourceRegeneration', name: "资源再生",
+            desc: (level) => `提高氧气恢复和生命恢复 ${level * 0.05}。`,
+            maxLevel: 2,
+            cost: [3, 5],
+            getEffect: (level) => ({ passiveHealthRecoveryBonus: level * 0.05, passiveOxygenRecoveryBonus: level * 0.05 })
+        }
+    };
+    
+    let activeSkills = {
+        'KineticEfficiency': 0,
+        'VoidBladeMastery': 0,
+        'ResourceRegeneration': 0,
+    };
+    
+    let skillEffects = {};
+
+    function calculateSkillEffects() {
+        skillEffects = {
+            thrustDrainMult: 1,
+            tetherDrainMult: 1,
+            slashRangeBonus: 0,
+            slashDamageBonus: 0,
+            slashDrainReduction: 0,
+            passiveHealthRecoveryBonus: 0,
+            passiveOxygenRecoveryBonus: 0,
+            dragMult: 1,
+            oxygenDrainMult: 1,
+        };
+
+        for (const skillId in activeSkills) {
+            const level = activeSkills[skillId];
+            if (level > 0) {
+                const skill = SKILL_TREE[skillId];
+                const effects = skill.getEffect(level);
+                
+                for (const key in effects) {
+                    if (key.endsWith('Mult')) {
+                        skillEffects[key] *= effects[key];
+                    } else {
+                        skillEffects[key] += effects[key];
+                    }
+                }
+            }
+        }
+    }
+    
+    function generateSkillTreeHTML() {
+        const container = document.getElementById('skill-nodes-container');
+        container.innerHTML = '';
+        const isPreGame = !gameState.running;
+        
+        for (const id in SKILL_TREE) {
+            const skill = SKILL_TREE[id];
+            const currentLevel = activeSkills[id];
+            const nextLevel = currentLevel + 1;
+            const cost = skill.cost[currentLevel];
+            const canUpgrade = nextLevel <= skill.maxLevel && player.skillPoints >= cost;
+            
+            let desc = skill.desc(currentLevel);
+            let nextDesc = nextLevel <= skill.maxLevel ? `下级: ${skill.desc(nextLevel)} (消耗 ${cost} SP)` : '已达最高等级';
+
+            const node = document.createElement('div');
+            node.className = 'skill-node flex justify-between items-center';
+            node.innerHTML = `
+                <div>
+                    <h3>${skill.name} (等级 ${currentLevel}/${skill.maxLevel})</h3>
+                    <p>当前效果: ${desc}</p>
+                    <p class="level-info">${nextDesc}</p>
+                </div>
+                <button class="upgrade-button action-button px-3 py-1 text-sm ${canUpgrade ? '' : 'upgrade-button:disabled'}" data-skill-id="${id}" ${canUpgrade ? '' : 'disabled'}>
+                    升级
+                </button>
+            `;
+            container.appendChild(node);
+        }
+
+        container.querySelectorAll('.upgrade-button').forEach(button => {
+            button.addEventListener('click', (e) => upgradeSkill(e.target.dataset.skillId));
+        });
+        
+        document.getElementById('close-skill-tree').textContent = isPreGame ? "开始游戏" : "返回游戏";
+        document.getElementById('skill-tree-hint').textContent = isPreGame ? "游戏开始前您有一次免费分配初始技能点的机会。" : "技能点会在游戏结束时结算。";
+    }
+
+    function upgradeSkill(skillId) {
+        const skill = SKILL_TREE[skillId];
+        const currentLevel = activeSkills[skillId];
+        const cost = skill.cost[currentLevel];
+
+        if (currentLevel < skill.maxLevel && player.skillPoints >= cost) {
+            player.skillPoints -= cost;
+            activeSkills[skillId]++;
+            calculateSkillEffects();
+            updateSkillPointDisplay();
+            saveUserSkills();
+            generateSkillTreeHTML();
+        }
+    }
+
+    function toggleSkillTree(forceShow = false) {
+        const modal = document.getElementById('skill-tree-modal');
+        const overlay = document.getElementById('game-status-overlay');
+        const closeButton = document.getElementById('close-skill-tree');
+        const isPreGame = !gameState.mode;
+        
+        if (forceShow || modal.classList.contains('hidden')) {
+            modal.classList.remove('hidden');
+            overlay.classList.add('hidden');
+            gameState.skillTreeVisible = true;
+            generateSkillTreeHTML();
+
+            closeButton.removeEventListener('click', startGame); 
+            closeButton.removeEventListener('click', toggleSkillTree);
+
+            if (isPreGame) {
+                 closeButton.addEventListener('click', startGame);
+            } else {
+                 closeButton.addEventListener('click', () => toggleSkillTree(false));
+            }
+        } else {
+            modal.classList.add('hidden');
+            gameState.skillTreeVisible = false;
+            if (gameState.running) {
+                requestAnimationFrame(gameLoop); 
+            }
+        }
+    }
+
+    const RANDOM_EVENTS = [
+        { name: "舱室减压", type: 'OxygenLeak', message: "警告！氧气泄漏！(O2 消耗速度加倍，持续 15 秒)", duration: 900, effect: { oxygenDrainMult: 2.0 }, color: COLOR_DANGER }, 
+        { name: "能源脉冲", type: 'EnergySurge', message: "检测到能源脉冲！(立即恢复 25 能源)", duration: 0, effect: { energyGain: 25 }, color: COLOR_SECONDARY },
+        { name: "碎片群", type: 'DebrisField', message: "附近出现碎片群！(所有移动阻力增加 10 秒)", duration: 600, effect: { dragMult: 0.99 }, color: COLOR_DARK_GREY },
+        { name: "紧急维修", type: 'EmergencyRepair', message: "系统自动修复，生命值小幅恢复。", duration: 0, effect: { healthGain: 10 }, color: COLOR_TEAL }
+    ];
+    let activeEvent = null;
+    let eventFrameCount = 0;
+    
+    function triggerRandomEvent() {
+        if (!gameState.running || activeEvent) return;
+
+        const event = RANDOM_EVENTS[Math.floor(Math.random() * RANDOM_EVENTS.length)];
+        activeEvent = event;
+        eventFrameCount = 0;
+        
+        const display = document.getElementById('event-display');
+        display.textContent = `${event.name}: ${event.message.split('(')[0]}`;
+        display.style.backgroundColor = event.color;
+        display.classList.add('event-active');
+        
+        if (event.effect.energyGain) {
+            player.energy = Math.min(100, player.energy + event.effect.energyGain);
+        }
+        if (event.effect.healthGain) {
+            player.health = Math.min(100, player.health + event.effect.healthGain);
+        }
+
+        setTimeout(() => {
+            if (activeEvent === event) {
+                 if (event.duration === 0) {
+                     display.classList.remove('event-active');
+                     activeEvent = null;
+                 }
+            }
+        }, 5000);
+    }
+
+    function updateRandomEvent() {
+        if (!activeEvent) {
+             skillEffects.dragMult = 1; 
+             skillEffects.oxygenDrainMult = 1;
+             return;
+        }
+
+        eventFrameCount++;
+
+        if (activeEvent.effect.dragMult) {
+             skillEffects.dragMult = activeEvent.effect.dragMult;
+        }
+        if (activeEvent.effect.oxygenDrainMult) {
+             skillEffects.oxygenDrainMult = activeEvent.effect.oxygenDrainMult;
+        }
+
+        if (activeEvent.duration > 0 && eventFrameCount >= activeEvent.duration) {
+            document.getElementById('event-display').classList.remove('event-active');
+            activeEvent = null;
+            skillEffects.dragMult = 1; 
+            skillEffects.oxygenDrainMult = 1;
+        }
+    }
+
+    function showEvent(message, color) {
+        const display = document.getElementById('event-display');
+        display.textContent = message;
+        display.style.backgroundColor = color;
+        display.classList.add('event-active');
+        
+        setTimeout(() => {
+            display.classList.remove('event-active');
+        }, 3000);
+    }
+
+    let keys = {};
+    let touchStartPos = { x: 0, y: 0 };
+    let isTouchGrappling = false;
+
+    document.addEventListener('keydown', (e) => {
+        if (gameState.skillTreeVisible) return;
+        keys[e.key] = true;
+        if (!gameState.running) return; 
+        if (e.key === 'R' || e.key === 'r') siphonPower();
+        if (e.key === ' ' || e.key === 'p' || e.key === 'P') slashAttack();
+        if (e.key === 'q' || e.key === 'Q') useActiveSkill();
+        if (e.key === 't' || e.key === 'T') toggleSkillTree(true);
+    });
+    document.addEventListener('keyup', (e) => {
+        keys[e.key] = false;
+    });
+
+    canvas.addEventListener('mousedown', (e) => {
+        if (!gameState.running || gameState.skillTreeVisible) return;
+        gameState.isGrappling = true;
+        updateGrappleTarget(e.clientX, e.clientY);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (gameState.isGrappling) {
+            updateGrappleTarget(e.clientX, e.clientY);
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        gameState.isGrappling = false;
+    });
+
+    function updateGrappleTarget(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        gameState.grappleTarget.x = (clientX - rect.left) * scaleX;
+        gameState.grappleTarget.y = (clientY - rect.top) * scaleY;
+    }
+    
+    canvas.addEventListener('touchstart', (e) => {
+        if (!gameState.running || gameState.skillTreeVisible || e.touches.length > 1) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        updateGrappleTarget(touch.clientX, touch.clientY);
+        
+        touchStartPos.x = touch.clientX;
+        touchStartPos.y = touch.clientY;
+        isTouchGrappling = false;
+    }, { passive: false });
+    
+    canvas.addEventListener('touchmove', (e) => {
+        if (!gameState.running || gameState.skillTreeVisible || e.touches.length !== 1) return;
+        const touch = e.touches[0];
+        updateGrappleTarget(touch.clientX, touch.clientY);
+        if (Math.abs(touch.clientX - touchStartPos.x) > 20 || Math.abs(touch.clientY - touchStartPos.y) > 20) {
+            gameState.isGrappling = true;
+            isTouchGrappling = true;
+        }
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', (e) => {
+        gameState.isGrappling = false;
+        if (!isTouchGrappling) {
+             const touch = e.changedTouches[0];
+             if (Math.abs(touch.clientX - touchStartPos.x) < 10 && Math.abs(touch.clientY - touchStartPos.y) < 10) {
+                 slashAttack();
+             }
+        }
+        isTouchGrappling = false;
+    });
+
+    function setupMobileControls() {
+        const thrustButtons = [
+            { id: 'thrust-up', keys: ['ArrowUp', 'w'] },
+            { id: 'thrust-down', keys: ['ArrowDown', 's'] },
+            { id: 'thrust-left', keys: ['ArrowLeft', 'a'] },
+            { id: 'thrust-right', keys: ['ArrowRight', 'd'] },
+        ];
+
+        thrustButtons.forEach(({ id, keys: keyList }) => {
+            const btn = document.getElementById(id);
+            if (btn) {
+                btn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    keyList.forEach(key => keys[key] = true);
+                });
+                btn.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    keyList.forEach(key => keys[key] = false);
+                });
+            }
+        });
+
+        document.getElementById('action-siphon')?.addEventListener('click', siphonPower);
+        document.getElementById('action-slash')?.addEventListener('click', slashAttack);
+        document.getElementById('action-skill')?.addEventListener('click', useActiveSkill);
+    }
+
+    function setupGameMode(mode) {
+        if (gameState.running) return;
+        
+        gameState.mode = mode;
+        const modeText = mode === 'Hardcore' ? '硬核 (消耗 X2)' : '普通';
+        document.getElementById('current-mode-display').textContent = `模式: ${modeText}`;
+    }
+    
+    function startGame() {
+        if (gameState.running) return;
+        
+        // 获取选择的地图和皮肤
+        const selectedMapCard = document.querySelector('.map-card.selected');
+        const selectedSkinOption = document.querySelector('.skin-option.selected');
+        
+        if (selectedMapCard) {
+            currentMap = selectedMapCard.dataset.map;
+        }
+        if (selectedSkinOption) {
+            currentSkin = selectedSkinOption.dataset.skin;
+        }
+        
+        // 加载选择的技能
+        activePlayerSkills = {};
+        localStorageManager.data.selectedSkills.forEach(skillId => {
+            if (ACTIVE_SKILLS[skillId]) {
+                activePlayerSkills[skillId] = { ...ACTIVE_SKILLS[skillId] };
+            }
+        });
+        
+        document.getElementById('skill-tree-modal').classList.add('hidden');
+        document.getElementById('game-status-overlay').classList.add('hidden');
+
+        player.x = 50;
+        player.y = GAME_HEIGHT / 2;
+        player.velX = 0;
+        player.velY = 0;
+        player.health = 100;
+        player.oxygen = 100;
+        player.energy = 100;
+        
+        resetEnvironment();
+        calculateSkillEffects();
+
+        gameState.running = true;
+        gameState.skillTreeVisible = false; 
+        gameState.startTime = Date.now();
+        gameState.elapsedTime = 0;
+        gameState.lastSkillPointTime = gameState.startTime;
+        gameState.lastEventTime = gameState.startTime;
+        gameState.siphonCooldown = 0;
+        activeEvent = null;
+
+        document.getElementById('reset-game-button').textContent = '放弃逃生';
+        updateResourceBars();
+        updateSkillPointDisplay();
+
+        gameLoop();
+    }
+
+    function endGame(status) {
+        if (!gameState.running) return;
+        
+        gameState.running = false;
+        
+        if (status === 'win') {
+            saveBestTime(gameState.elapsedTime);
+            const hafCoinsEarned = Math.floor(gameState.elapsedTime / 60000);
+            localStorageManager.addHafCoins(hafCoinsEarned);
+            localStorageManager.addEscapeTime(gameState.elapsedTime);
+        }
+
+        const newSP = Math.floor(gameState.elapsedTime / TIME_PER_SKILL_POINT_MS);
+        player.skillPoints += newSP;
+        saveUserSkills();
+
+        showGameStatusOverlay(status);
+        
+        document.getElementById('reset-game-button').textContent = '返回菜单';
+        document.getElementById('skill-tree-button').disabled = false;
+    }
+    
+    function siphonPower() {
+        if (gameState.siphonCooldown > 0 || player.energy >= 100) return;
+        
+        const siphonPoint = resources.find(r => r.type === 'siphon_point');
+        if (!siphonPoint) return;
+
+        const dist = Math.hypot(player.x - siphonPoint.x, player.y - siphonPoint.y);
+        
+        if (dist <= siphonPoint.range + player.radius) {
+            player.energy = Math.min(100, player.energy + ENERGY_SIPHON_GAIN);
+            gameState.siphonCooldown = SIPHON_COOLDOWN_FRAMES;
+            siphonPoint.isSiphoning = true;
+            setTimeout(() => { siphonPoint.isSiphoning = false; }, 500);
+        }
+    }
+    
+    function slashAttack() {
+        if (gameState.isSlashing || player.energy < ENERGY_DRAIN_SLASH_BASE) return;
+        
+        const energyCost = ENERGY_DRAIN_SLASH_BASE - skillEffects.slashDrainReduction;
+        player.energy = Math.max(0, player.energy - energyCost);
+        gameState.isSlashing = true;
+        gameState.slashFrameCount = 0;
+        
+        checkSlashHit();
+    }
+    
+    function checkSlashHit() {
+        const slashRadius = 20 + skillEffects.slashRangeBonus;
+        
+        enemies = enemies.filter(enemy => {
+            const dist = Math.hypot(enemy.x - player.x, enemy.y - player.y);
+            if (dist <= enemy.radius + slashRadius) {
+                const damage = 10 + skillEffects.slashDamageBonus;
+                enemy.health -= damage;
+                
+                const angle = Math.atan2(enemy.y - player.y, enemy.x - player.x);
+                enemy.velX += Math.cos(angle) * 1; 
+                enemy.velY += Math.sin(angle) * 1; 
+
+                if (enemy.health <= 0) {
+                    player.skillPoints += 1;
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+
+    function updatePlayer() {
+        let thrustX = 0;
+        let thrustY = 0;
+        
+        if (keys['w'] || keys['W'] || keys['ArrowUp']) thrustY -= THRUST_FORCE_BASE;
+        if (keys['s'] || keys['S'] || keys['ArrowDown']) thrustY += THRUST_FORCE_BASE;
+        if (keys['a'] || keys['A'] || keys['ArrowLeft']) thrustX -= THRUST_FORCE_BASE;
+        if (keys['d'] || keys['D'] || keys['ArrowRight']) thrustX += THRUST_FORCE_BASE;
+        
+        const isThrusting = thrustX !== 0 || thrustY !== 0;
+
+        if (isThrusting && player.energy > 0) {
+            const energyDrain = ENERGY_DRAIN_THRUST_BASE * skillEffects.thrustDrainMult * (gameState.mode === 'Hardcore' ? 2 : 1);
+            player.energy = Math.max(0, player.energy - energyDrain);
+            player.velX += thrustX;
+            player.velY += thrustY;
+        }
+
+        if (gameState.isGrappling && player.energy > 0) {
+            const targetX = gameState.grappleTarget.x;
+            const targetY = gameState.grappleTarget.y;
+            const dist = Math.hypot(targetX - player.x, targetY - player.y);
+            
+            if (dist > player.radius) {
+                const angle = Math.atan2(targetY - player.y, targetX - player.x);
+                const pullForce = 0.005;
+                player.velX += Math.cos(angle) * pullForce * dist; 
+                player.velY += Math.sin(angle) * pullForce * dist;
+
+                const energyDrain = ENERGY_DRAIN_TETHER_BASE * skillEffects.tetherDrainMult * (gameState.mode === 'Hardcore' ? 2 : 1);
+                player.energy = Math.max(0, player.energy - energyDrain);
+            }
+        } else {
+            gameState.isGrappling = false;
+        }
+
+        if (gameState.isSlashing) {
+             gameState.slashFrameCount++;
+             if (gameState.slashFrameCount >= 5) {
+                 gameState.isSlashing = false;
+             }
+        }
+
+        const dragFactor = ZERO_G_DRAG * skillEffects.dragMult; 
+        
+        player.velX *= dragFactor;
+        player.velY *= dragFactor;
+
+        const currentVelocity = Math.hypot(player.velX, player.velY);
+        if (currentVelocity > MAX_VELOCITY) {
+            player.velX = (player.velX / currentVelocity) * MAX_VELOCITY;
+            player.velY = (player.velY / currentVelocity) * MAX_VELOCITY;
+        }
+
+        player.x += player.velX;
+        player.y += player.velY;
+        
+        // 边界检查 - 防止飞出地图
+        if (player.x - player.radius < 10) {
+            player.x = 10 + player.radius;
+            player.velX = Math.abs(player.velX) * 0.5;
+        }
+        if (player.x + player.radius > GAME_WIDTH - 10) {
+            player.x = GAME_WIDTH - 10 - player.radius;
+            player.velX = -Math.abs(player.velX) * 0.5;
+        }
+        if (player.y - player.radius < 10) {
+            player.y = 10 + player.radius;
+            player.velY = Math.abs(player.velY) * 0.5;
+        }
+        if (player.y + player.radius > GAME_HEIGHT - 10) {
+            player.y = GAME_HEIGHT - 10 - player.radius;
+            player.velY = -Math.abs(player.velY) * 0.5;
+        }
+        
+        const baseOxygenDrain = (gameState.mode === 'Hardcore' ? OXYGEN_DRAIN_RATE_HARDCORE : OXYGEN_DRAIN_RATE_NORMAL);
+        const passiveOxygenRecovery = 0.05 + skillEffects.passiveOxygenRecoveryBonus;
+        
+        if (player.oxygen < 100) {
+            player.oxygen += passiveOxygenRecovery;
+        }
+        player.oxygen -= baseOxygenDrain * skillEffects.oxygenDrainMult;
+        
+        if (player.health < 100) {
+             player.health += (0.01 + skillEffects.passiveHealthRecoveryBonus);
+        }
+
+        player.health = Math.min(100, player.health);
+        player.oxygen = Math.min(100, player.oxygen);
+        player.energy = Math.min(100, player.energy);
+        
+        if (player.oxygen <= 0) {
+             player.health -= 0.1;
+        }
+        
+        if (player.health <= 0) {
+             endGame('lose');
+        }
+
+        gameState.siphonCooldown = Math.max(0, gameState.siphonCooldown - 1);
+    }
+    
+    function updateEnemies() {
+        enemies.forEach(enemy => {
+            const angle = Math.atan2(player.y - enemy.y, player.x - enemy.x);
+            const chaseForce = 0.005;
+            
+            enemy.velX += Math.cos(angle) * chaseForce;
+            enemy.velY += Math.sin(angle) * chaseForce;
+            
+            enemy.velX *= 0.99; 
+            enemy.velY *= 0.99;
+            
+            const currentVelocity = Math.hypot(enemy.velX, enemy.velY);
+            if (currentVelocity > 1.5) {
+                 enemy.velX = (enemy.velX / currentVelocity) * 1.5;
+                 enemy.velY = (enemy.velY / currentVelocity) * 1.5;
+            }
+
+            enemy.x += enemy.velX;
+            enemy.y += enemy.velY;
+            
+            if (enemy.x - enemy.radius < 10 || enemy.x + enemy.radius > GAME_WIDTH - 10) enemy.velX *= -1;
+            if (enemy.y - enemy.radius < 10 || enemy.y + enemy.radius > GAME_HEIGHT - 10) enemy.velY *= -1;
+
+            const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y);
+            if (dist < player.radius + enemy.radius) {
+                // 检查护盾
+                if (activePlayerSkills.shield && activePlayerSkills.shield.active) {
+                    // 护盾激活时不受伤害
+                    const knockbackAngle = Math.atan2(player.y - enemy.y, player.x - enemy.x);
+                    enemy.velX += Math.cos(knockbackAngle) * 2;
+                    enemy.velY += Math.sin(knockbackAngle) * 2;
+                } else {
+                    player.health -= 0.5;
+                    const knockbackAngle = Math.atan2(player.y - enemy.y, player.x - enemy.x);
+                    player.velX += Math.cos(knockbackAngle) * 0.5;
+                    player.velY += Math.sin(knockbackAngle) * 0.5;
+                }
+            }
+        });
+    }
+
+    function checkCollisions() {
+        for (const wall of walls) {
+            let dx = 0, dy = 0;
+            
+            let closestX = Math.max(wall.x, Math.min(player.x, wall.x + wall.w));
+            let closestY = Math.max(wall.y, Math.min(player.y, wall.y + wall.h));
+            
+            dx = player.x - closestX;
+            dy = player.y - closestY;
+            let dist = Math.hypot(dx, dy);
+
+            if (dist < player.radius) {
+                let overlap = player.radius - dist;
+                let angle = Math.atan2(dy, dx);
+                player.x += Math.cos(angle) * overlap;
+                player.y += Math.sin(angle) * overlap;
+                
+                let normalX = Math.cos(angle);
+                let normalY = Math.sin(angle);
+                let dotProduct = player.velX * normalX + player.velY * normalY;
+
+                player.velX -= 2 * dotProduct * normalX * 0.5;
+                player.velY -= 2 * dotProduct * normalY * 0.5;
+
+                if (wall.type === 'goal') {
+                    endGame('win');
+                    return;
+                }
+            }
+        }
+
+        for (const hazard of hazards) {
+            if (player.x > hazard.x && player.x < hazard.x + hazard.w &&
+                player.y > hazard.y && player.y < hazard.y + hazard.h) {
+                player.health -= hazard.damage;
+            }
+        }
+        
+        resources = resources.filter(res => {
+            if (res.type === 'siphon_point') return true;
+            
+            const dist = Math.hypot(player.x - res.x, player.y - res.y);
+            if (dist < player.radius + res.radius) {
+                if (!res.collected) {
+                    if (res.type === 'oxygen') {
+                        player.oxygen = Math.min(100, player.oxygen + res.amount);
+                        return false;
+                    } else if (res.type === 'energy') {
+                        player.energy = Math.min(100, player.energy + res.amount);
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
+    }
+
+    function drawPlayer() {
+        ctx.save();
+        ctx.translate(player.x, player.y);
+        ctx.rotate(Math.atan2(player.velY, player.velX));
+        
+        // 使用选择的皮肤颜色
+        const skin = SKINS[currentSkin];
+        ctx.fillStyle = skin.color;
+        ctx.beginPath();
+        ctx.moveTo(player.radius, 0);
+        ctx.lineTo(-player.radius, -player.radius / 2);
+        ctx.lineTo(-player.radius, player.radius / 2);
+        ctx.closePath();
+        ctx.fill();
+        
+        // 护盾效果
+        if (activePlayerSkills.shield && activePlayerSkills.shield.active) {
+            ctx.strokeStyle = COLOR_SECONDARY;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(0, 0, player.radius + 10, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+        
+        ctx.strokeStyle = COLOR_SECONDARY;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        const isThrusting = (keys['w'] || keys['W'] || keys['ArrowUp'] || keys['s'] || keys['S'] || keys['ArrowDown'] || keys['a'] || keys['A'] || keys['d'] || keys['D'] || keys['ArrowRight'] || keys['ArrowLeft']);
+        if (isThrusting) {
+            ctx.fillStyle = '#ff7f00';
+            ctx.beginPath();
+            ctx.moveTo(-player.radius, -player.radius / 3);
+            ctx.lineTo(-player.radius - 5, 0);
+            ctx.lineTo(-player.radius, player.radius / 3);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        ctx.restore();
+        
+        if (gameState.isSlashing) {
+             drawSlash();
+        }
+
+        if (gameState.isGrappling) {
+             drawGrappleLine();
+        }
+    }
+    
+    function drawSlash() {
+        const slashRadius = 20 + skillEffects.slashRangeBonus;
+        ctx.strokeStyle = '#8b5cf6';
+        ctx.lineWidth = 3;
+        ctx.globalAlpha = 1 - (gameState.slashFrameCount / 5);
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, slashRadius, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+    }
+
+    function drawGrappleLine() {
+        ctx.strokeStyle = COLOR_SECONDARY;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(player.x, player.y);
+        ctx.lineTo(gameState.grappleTarget.x, gameState.grappleTarget.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        
+        ctx.fillStyle = COLOR_SECONDARY;
+        ctx.beginPath();
+        ctx.arc(gameState.grappleTarget.x, gameState.grappleTarget.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    function drawWalls() {
+        ctx.fillStyle = COLOR_DARK_GREY;
+        for (const wall of walls) {
+            if (wall.type === 'goal') {
+                ctx.fillStyle = '#34d399';
+            } else {
+                ctx.fillStyle = COLOR_DARK_GREY;
+            }
+            ctx.fillRect(wall.x, wall.y, wall.w, wall.h);
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(wall.x, wall.y, wall.w, wall.h);
+        }
+    }
+    
+    function drawHazards() {
+        for (const hazard of hazards) {
+            if (hazard.type === 'radiation') {
+                ctx.fillStyle = 'rgba(255, 0, 0, 0.2)';
+                ctx.fillRect(hazard.x, hazard.y, hazard.w, hazard.h);
+                ctx.strokeStyle = COLOR_DANGER;
+            } else if (hazard.type === 'heat') {
+                ctx.fillStyle = 'rgba(255, 165, 0, 0.2)';
+                ctx.fillRect(hazard.x, hazard.y, hazard.w, hazard.h);
+                ctx.strokeStyle = COLOR_SECONDARY;
+            }
+            ctx.lineWidth = 2;
+            ctx.strokeRect(hazard.x, hazard.y, hazard.w, hazard.h);
+        }
+    }
+
+    function drawResources() {
+        for (const res of resources) {
+            if (res.type === 'oxygen') {
+                ctx.fillStyle = COLOR_TEAL;
+                ctx.beginPath();
+                ctx.arc(res.x, res.y, res.radius, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (res.type === 'energy') {
+                ctx.fillStyle = COLOR_SECONDARY;
+                ctx.beginPath();
+                ctx.arc(res.x, res.y, res.radius, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (res.type === 'siphon_point') {
+                ctx.fillStyle = res.isSiphoning ? 'rgba(252, 211, 77, 0.8)' : 'rgba(252, 211, 77, 0.4)';
+                ctx.beginPath();
+                ctx.arc(res.x, res.y, res.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                if (gameState.siphonCooldown > 0) {
+                     const endAngle = (gameState.siphonCooldown / SIPHON_COOLDOWN_FRAMES) * 2 * Math.PI - (Math.PI / 2);
+                     ctx.strokeStyle = COLOR_DANGER;
+                     ctx.lineWidth = 2;
+                     ctx.beginPath();
+                     ctx.arc(res.x, res.y, res.radius + 5, -Math.PI / 2, endAngle);
+                     ctx.stroke();
+                }
+            }
+        }
+    }
+    
+    function drawEnemies() {
+        enemies.forEach(enemy => {
+            ctx.save();
+            ctx.translate(enemy.x, enemy.y);
+            enemy.rotation += 0.01;
+            ctx.rotate(enemy.rotation);
+
+            ctx.fillStyle = enemy.color;
+            ctx.fillRect(-enemy.radius, -enemy.radius, enemy.radius * 2, enemy.radius * 2);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(-enemy.radius, -enemy.radius, enemy.radius * 2, enemy.radius * 2);
+            
+            ctx.fillStyle = 'red';
+            ctx.fillRect(-enemy.radius, -enemy.radius - 5, enemy.radius * 2, 2);
+            ctx.fillStyle = 'lime';
+            ctx.fillRect(-enemy.radius, -enemy.radius - 5, (enemy.health / enemy.maxHealth) * enemy.radius * 2, 2);
+
+            ctx.restore();
+        });
+    }
+
+    function drawTreasureChests() {
+        treasureChests.forEach(chest => {
+            if (!chest.collected) {
+                ctx.fillStyle = '#8b5cf6';
+                ctx.fillRect(chest.x - 15, chest.y - 15, 30, 30);
+                ctx.strokeStyle = COLOR_SECONDARY;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(chest.x - 15, chest.y - 15, 30, 30);
+                
+                ctx.fillStyle = COLOR_SECONDARY;
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('💰', chest.x, chest.y + 4);
+            }
+        });
+    }
+
+    function drawGame() {
+        ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+        ctx.fillStyle = COLOR_BG;
+        ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+        drawWalls();
+        drawHazards();
+        drawResources();
+        drawEnemies();
+        drawTreasureChests();
+        drawPlayer();
+    }
+
+    let lastFrameTime = 0;
+    const FRAME_RATE = 1000 / 60;
+
+    function gameLoop(timestamp) {
+        if (!gameState.running || gameState.skillTreeVisible) return;
+        
+        if (timestamp < lastFrameTime + FRAME_RATE) {
+            requestAnimationFrame(gameLoop);
+            return;
+        }
+        lastFrameTime = timestamp;
+
+        gameState.elapsedTime = Date.now() - gameState.startTime;
+        document.getElementById('time-display').textContent = formatTime(gameState.elapsedTime);
+
+        if (gameState.elapsedTime - gameState.lastSkillPointTime >= TIME_PER_SKILL_POINT_MS) {
+            player.skillPoints += 1;
+            gameState.lastSkillPointTime += TIME_PER_SKILL_POINT_MS;
+        }
+        
+        if (gameState.elapsedTime - gameState.lastEventTime >= EVENT_INTERVAL_MS) {
+            triggerRandomEvent();
+            gameState.lastEventTime = gameState.elapsedTime;
+        }
+
+        updatePlayer();
+        updateEnemies();
+        checkCollisions();
+        updateRandomEvent();
+        updateSkillCooldowns();
+        checkTreasureCollection();
+        
+        treasureSpawnTimer++;
+        if (treasureSpawnTimer >= TREASURE_SPAWN_INTERVAL) {
+            spawnTreasureChest();
+            treasureSpawnTimer = 0;
+        }
+
+        updateResourceBars();
+        updateSkillPointDisplay();
+
+        drawGame();
+
+        requestAnimationFrame(gameLoop);
+    }
+    
+    document.getElementById('reset-game-button').addEventListener('click', () => {
+        if (gameState.running) {
+             endGame('lose');
+        } else {
+             showGameStatusOverlay('menu');
+        }
+    });
+
+    document.getElementById('skill-tree-button').addEventListener('click', () => toggleSkillTree(true));
+
+    // 地图选择事件
+    document.querySelectorAll('.map-card').forEach(card => {
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.map-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+        });
+    });
+
+    // 皮肤选择事件
+    document.querySelectorAll('.skin-option').forEach(option => {
+        option.addEventListener('click', () => {
+            document.querySelectorAll('.skin-option').forEach(o => o.classList.remove('selected'));
+            option.classList.add('selected');
+        });
+    });
+
+    setupMobileControls();
+    calculateSkillEffects();
+    updateSkillPointDisplay();
+    updateHafCoinsDisplay();
+    localStorageManager.updateDisplay();
+</script>
 </body>
 </html>
