@@ -1,348 +1,138 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@400;700&display=swap');
+:root {
+    --color-primary: #1e3a8a; /* Deep Blue */
+    --color-secondary: #fcd34d; /* Amber */
+    --color-danger: #dc2626;
+    --color-success: #10b981;
+    --color-text: #e0f2f1;
+    --color-background: #0f172a; /* Dark Slate */
+    --font-display: 'Orbitron', sans-serif;
+    --font-body: 'Inter', sans-serif;
 }
 
 body {
-    background-color: #f5f5f5;
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-text);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
-}
-
-/* 登录/注册样式 */
-.auth-container {
-    width: 100%;
-    max-width: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-}
-
-.auth-card {
-    width: 100%;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-}
-
-.auth-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.auth-header h2 {
-    color: #333;
-    margin-bottom: 10px;
-    font-size: 24px;
-}
-
-.auth-header p {
-    color: #666;
-    font-size: 16px;
-}
-
-.auth-form {
-    width: 100%;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #555;
-    font-weight: 500;
-    font-size: 14px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-.form-group input:focus {
-    border-color: #667eea;
-}
-
-.auth-btn {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s;
-    margin-bottom: 15px;
-}
-
-.auth-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.auth-toggle {
-    text-align: center;
-    color: #666;
-    font-size: 14px;
-}
-
-.auth-toggle span {
-    color: #667eea;
-    cursor: pointer;
-    font-weight: 500;
-}
-
-.auth-toggle span:hover {
-    text-decoration: underline;
-}
-
-/* 聊天容器样式 */
-.chat-container {
-    width: 100%;
-    max-width: 800px;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin: 0;
     overflow: hidden;
 }
 
-.chat-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 20px;
-    text-align: center;
-}
-
-.chat-header h2 {
-    font-size: 24px;
-    margin-bottom: 5px;
-}
-
-.header-actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.chat-header .subtitle {
-    font-size: 14px;
-    opacity: 0.9;
-}
-
-.logout-btn {
-    padding: 6px 12px;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.logout-btn:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
-}
-
-.chat-messages {
-    height: 400px;
-    overflow-y: auto;
-    padding: 20px;
-    background-color: #fafafa;
-}
-
-.welcome-message {
-    text-align: center;
-    color: #666;
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #e8f5e9;
-    border-radius: 8px;
-}
-
-.message {
-    margin-bottom: 15px;
+.game-container {
     display: flex;
     flex-direction: column;
+    width: 95%;
+    max-width: 1000px;
+    border-radius: 1rem;
+    box-shadow: 0 0 40px rgba(30, 58, 138, 0.5);
+    background-color: #1e293b;
+    padding: 1rem;
 }
 
-.message.user {
-    align-items: flex-end;
+canvas {
+    background-color: #0b111e;
+    border: 2px solid var(--color-primary);
+    border-radius: 0.75rem;
+    touch-action: none; 
+    width: 100%; /* Make canvas responsive */
+    aspect-ratio: 16 / 9; /* Maintain aspect ratio */
 }
 
-.message.other {
-    align-items: flex-start;
+.ui-panel {
+    font-family: var(--font-display);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap; 
 }
 
-.message-content {
-    max-width: 70%;
-    padding: 12px 16px;
-    border-radius: 18px;
-    word-wrap: break-word;
+/* Resource Bar Styling */
+.resource-bar {
+    width: 80px; 
+    height: 8px;
+    background-color: #475569;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-left: 0.25rem;
+}
+
+/* General Button Styles */
+.game-status button, .modal button, .ui-panel button {
+    font-family: var(--font-display);
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(145deg, var(--color-primary), #0c4a6e);
+    color: var(--color-text);
+    border: 2px solid var(--color-secondary);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(30, 58, 138, 0.5);
+    text-transform: uppercase;
+}
+
+.game-status button:hover, .modal button:hover, .ui-panel button:hover {
+    background: linear-gradient(145deg, #0c4a6e, var(--color-primary));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(252, 211, 77, 0.3);
+}
+
+/* Modal Styles */
+.game-status, .modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: var(--font-display);
+    z-index: 100;
+    border-radius: 0.75rem;
+}
+
+.modal-content {
+    background-color: #1e293b;
+    border: 3px solid var(--color-primary);
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 0 30px rgba(252, 211, 77, 0.2);
     position: relative;
 }
 
-.message.user .message-content {
-    background-color: #667eea;
-    color: white;
-    border-bottom-right-radius: 4px;
+.modal h2, .game-status h2 {
+    font-size: 2.25rem;
+    color: var(--color-secondary);
+    margin-bottom: 1rem;
 }
 
-.message.other .message-content {
-    background-color: #e9e9eb;
-    color: #333;
-    border-bottom-left-radius: 4px;
-}
-
-.message-info {
-    font-size: 12px;
-    color: #888;
-    margin-bottom: 4px;
-    padding: 0 8px;
-}
-
-.nickname-input,
-.chat-input {
-    display: flex;
-    padding: 20px;
-    background-color: white;
-    border-top: 1px solid #eee;
-    gap: 10px;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-    flex: 1;
-    padding: 12px 16px;
-    border: 2px solid #ddd;
-    border-radius: 25px;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus {
-    border-color: #667eea;
-}
-
-button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 25px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-weight: 500;
-}
-
-#send-message {
-    background-color: #667eea;
-    color: white;
-}
-
-#send-message:hover {
-    background-color: #5a67d8;
-    transform: translateY(-2px);
-}
-
-#clear-messages {
-    background-color: #e53e3e;
-    color: white;
-}
-
-#clear-messages:hover {
-    background-color: #c53030;
-    transform: translateY(-2px);
-}
-
-.chat-info {
-    padding: 15px 20px;
-    background-color: #f8f9fa;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    color: #666;
-}
-
-/* 响应式设计 */
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
-    
-    .auth-container,
-    .chat-container {
-        max-width: 100%;
-    }
-    
-    .auth-card {
-        padding: 20px;
-    }
-    
-    .chat-messages {
-        height: 300px;
-    }
-    
-    .message-content {
-        max-width: 85%;
-    }
-    
-    .chat-info,
-    .header-actions {
+/* Mobile adjustments */
+@media (max-width: 640px) {
+    .ui-panel {
         flex-direction: column;
-        gap: 5px;
+        align-items: flex-start;
+        gap: 0.5rem;
     }
-}
-
-/* 滚动条样式 */
-.chat-messages::-webkit-scrollbar {
-    width: 6px;
-}
-
-.chat-messages::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-.chat-messages::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
-
-.chat-messages::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-/* 错误提示样式 */
-.error-message {
-    background-color: #fed7d7;
-    color: #c53030;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    font-size: 14px;
-    border-left: 4px solid #e53e3e;
+    .ui-panel > div {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .ui-panel button {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
 }
