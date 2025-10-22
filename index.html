@@ -1,23 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>星际冒险 - 欢迎</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>C++ 命令行游戏网页版</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="home-page">
-        <h1>星际冒险</h1>
-        <p>探索未知的宇宙，驾驶你的飞船避开陨石，挑战黑洞，收集星星，获得高分！</p>
-        <button id="start-btn" onclick="startGame()">开始游戏</button>
-        <button id="instructions-btn" onclick="showInstructions()">游戏说明</button>
-        <div id="instructions" class="hidden">
-            <h2>游戏说明</h2>
-            <p>使用左右箭头键控制飞船的移动，躲避陨石和黑洞，收集星星获得分数。</p>
-            <button onclick="hideInstructions()">关闭说明</button>
+    <div id="game-container">
+        <div id="output"></div>
+        
+        <div id="input-container">
+            <span>> </span>
+            <input type="text" id="command-input" autofocus>
         </div>
     </div>
-    <script src="index.js"></script>
+    
+    <script src="game.js"></script>
 </body>
 </html>
